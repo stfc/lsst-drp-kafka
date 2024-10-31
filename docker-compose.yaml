@@ -1,112 +1,31 @@
 services:
-
-  zookeeper-1:
+  zookeeper1:
     image: confluentinc/cp-zookeeper:latest
-    hostname: zookeeper-1
-    container_name: zookeeper-1
-    volumes:
-      - ./zookeeper-1_data:/var/lib/zookeeper/data
-      - ./zookeeper-1_log:/var/lib/zookeeper/log
+    container_name: zookeeper1
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-      ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=zookeeper-1:2888:3888;2181 server.2=zookeeper-2:2888:3888;2181 server.3=zookeeper-3:2888:3888;2181
+    restart: always
 
-  zookeeper-2:
-    image: confluentinc/cp-zookeeper:latest
-    hostname: zookeeper-2
-    container_name: zookeeper-2
-    volumes:
-      - ./zookeeper-2_data:/var/lib/zookeeper/data
-      - ./zookeeper-2_log:/var/lib/zookeeper/log
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-      ZOO_MY_ID: 2
-      ZOO_SERVERS: server.1=zookeeper-1:2888:3888;2181 server.2=zookeeper-2:2888:3888;2181 server.3=zookeeper-3:2888:3888;2181
-
-  zookeeper-3:
-    image: confluentinc/cp-zookeeper:latest
-    hostname: zookeeper-3
-    container_name: zookeeper-3
-    volumes:
-      - ./zookeeper-3_data:/var/lib/zookeeper/data
-      - ./zookeeper-3_log:/var/lib/zookeeper/log
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-      ZOO_MY_ID: 3
-      ZOO_SERVERS: server.1=zookeeper-1:2888:3888;2181 server.2=zookeeper-2:2888:3888;2181 server.3=zookeeper-3:2888:3888;2181
-
-  broker-1:
+  broker1:
     image: confluentinc/cp-kafka:latest
-    hostname: broker-1
-    container_name: broker-1
-    volumes:
-      - ./broker-1-data:/var/lib/kafka/data
-    depends_on:
-      - zookeeper-1
-      - zookeeper-2
-      - zookeeper-3
+    container_name: broker1
+    hostname: broker1
     ports:
-      - 9092:9092
-      - 29092:29092
+      - "9092:9092"
+      - "29092:29092"
+    depends_on:
+      - zookeeper1
+    restart: always
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181
-      KAFKA_LISTENERS: HOST://0.0.0.0:9092,INTERNAL://0.0.0.0:29092
-      KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9092,INTERNAL://broker-1:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: HOST:PLAINTEXT,INTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-      KAFKA_SNAPSHOT_TRUST_EMPTY: true
-
-  broker-2:
-    image: confluentinc/cp-kafka:latest
-    hostname: broker-2
-    container_name: broker-2
-    volumes:
-      - ./broker-2-data:/var/lib/kafka/data
-    depends_on:
-      - zookeeper-1
-      - zookeeper-2
-      - zookeeper-3
-      - broker-1
-    ports:
-      - 9093:9093
-      - 29093:29093
-    environment:
-      KAFKA_BROKER_ID: 2
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181
-      KAFKA_LISTENERS: HOST://0.0.0.0:9093,INTERNAL://0.0.0.0:29093
-      KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9093,INTERNAL://broker-2:29093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: HOST:PLAINTEXT,INTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-      KAFKA_SNAPSHOT_TRUST_EMPTY: true
-
-  broker-3:
-    image: confluentinc/cp-kafka:latest
-    hostname: broker-3
-    container_name: broker-3
-    volumes:
-      - ./broker-3-data:/var/lib/kafka/data
-    depends_on:
-      - zookeeper-1
-      - zookeeper-2
-      - zookeeper-3
-      - broker-1
-      - broker-2
-    ports:
-      - 9094:9094
-      - 29094:29094
-    environment:
-      KAFKA_BROKER_ID: 3
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181
-      KAFKA_LISTENERS: HOST://0.0.0.0:9093,INTERNAL://0.0.0.0:29093
-      KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9094,INTERNAL://broker-3:29094
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: HOST:PLAINTEXT,INTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-      KAFKA_SNAPSHOT_TRUST_EMPTY: true
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper1:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXT:PLAINTEXT,INT:PLAINTEXT
+      KAFKA_LISTENERS: EXT://0.0.0.0:9092,INT://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: EXT://localhost:9092,INT://broker1:29092
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_INTER_BROKER_LISTENER_NAME: INT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   mirrormaker2:
     image: confluentinc/cp-kafka-connect:latest
@@ -114,51 +33,23 @@ services:
     healthcheck:
       test: [ "NONE" ]
     depends_on:
-      - zookeeper-1
-      - zookeeper-2
-      - zookeeper-3
-      - broker-1
-      - broker-2
-      - broker-3
+      - zookeeper1
+      - broker1
     restart: always
     command:
       - /bin/connect-mirror-maker
       - /etc/kafka-connect/mm2.properties
     volumes:
       - ./mm2.properties:/etc/kafka-connect/mm2.properties:ro
-      - ./log4j.properties:/etc/kafka-connect/kafka-log4j.properties:ro
+      - ./kafka-log4j.properties:/etc/kafka-connect/kafka-log4j.properties:ro
     environment:
       KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/etc/kafka-connect/kafka-log4j.properties
 
-  rest-proxy:
-    image: confluentinc/cp-kafka-rest:latest
-    ports:
-      - "8082:8082"
-    depends_on:
-      - zookeeper-1
-      - zookeeper-2
-      - zookeeper-3
-      - broker-1
-      - broker-2
-      - broker-3
-    hostname: rest-proxy
-    container_name: rest-proxy
-    environment:
-      KAFKA_REST_HOST_NAME: rest-proxy
-      KAFKA_REST_BOOTSTRAP_SERVERS: 'broker-1:29092,broker-2:29093,broker-3:29094'
-      KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
-
-  # This won't work yet, but also shouldn't get in the way of the above
   ingestd:
     image: ghcr.io/lsst-dm/ctrl_ingestd:1.2
     container_name: ingestd
     depends_on:
-      - zookeeper-1
-      - zookeeper-2
-      - zookeeper-3
-      - broker-1
-      - broker-2
-      - broker-3
+      - broker1
     restart: always
     environment:
       CTRL_INGESTD_CONFIG: /etc/ingestd.yml
@@ -169,3 +60,17 @@ services:
       - /etc/lsst-lancs/ingestd.yml:/etc/ingestd.yml:ro
       - /path/to/db-auth.yaml:/etc/db-auth.yaml:ro
       - /cvmfs:/cvmfs:ro
+
+  rest-proxy:
+    image: confluentinc/cp-kafka-rest:latest
+    ports:
+      - "8082:8082"
+    depends_on:
+      - zookeeper1
+      - broker1
+    hostname: rest-proxy
+    container_name: rest-proxy
+    environment:
+      KAFKA_REST_HOST_NAME: rest-proxy
+      KAFKA_REST_BOOTSTRAP_SERVERS: 'broker1:29092'
+      KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
