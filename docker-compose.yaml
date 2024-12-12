@@ -22,7 +22,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper1:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXT:PLAINTEXT,INT:PLAINTEXT
       KAFKA_LISTENERS: EXT://0.0.0.0:9092,INT://0.0.0.0:29092
-      KAFKA_ADVERTISED_LISTENERS: EXT://localhost:9092,INT://broker1:29092
+      KAFKA_ADVERTISED_LISTENERS: EXT://130.246.80.239:9092,INT://broker1:29092
       KAFKA_LOG_RETENTION_HOURS: 168
       KAFKA_INTER_BROKER_LISTENER_NAME: INT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -42,6 +42,7 @@ services:
     volumes:
       - ./mm2.properties:/etc/kafka-connect/mm2.properties:ro
       - ./kafka-log4j.properties:/etc/kafka-connect/kafka-log4j.properties:ro
+
     environment:
       KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/etc/kafka-connect/kafka-log4j.properties
 
@@ -52,14 +53,13 @@ services:
       - broker1
     restart: always
     environment:
-      CTRL_INGESTD_CONFIG: /etc/ingestd.yml
+      CTRL_INGESTD_CONFIG: /etc/ingestd.yaml
       LSST_DB_AUTH: /etc/db-auth.yaml
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
     volumes:
-      - /cephfs/grid/lsst/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
-      - /etc/lsst-lancs/ingestd.yml:/etc/ingestd.yml:ro
-      - /path/to/db-auth.yaml:/etc/db-auth.yaml:ro
-      - /cvmfs:/cvmfs:ro
+      - ./butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
+      - ./ingestd.yaml:/etc/ingestd.yaml:ro
+      - /etc/db-auth.yaml:/etc/db-auth.yaml:ro
 
   rest-proxy:
     image: confluentinc/cp-kafka-rest:latest
