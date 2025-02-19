@@ -10,5 +10,8 @@ butler:
 
 rses:
   usdf.RAL_BUTLER_DISK:
-    rucio_prefix: davs://xrootd.echo.stfc.ac.uk:1094/lsst:datadisk
-    fs_prefix: https://webdav.echo.stfc.ac.uk:1094/lsst:datadisk/job_outputs/
+    rucio_prefix: davs://xrootd.echo.stfc.ac.uk:1094/lsst:datadisk/butler/
+    fs_prefix: https://webdav.echo.stfc.ac.uk:1094/lsst:datadisk/butler/job_outputs/
+  usdf.RAL_RAW_DISK:
+    rucio_prefix: https://webdav.echo.stfc.ac.uk:1094/lsst:datadisk/raw/
+    fs_prefix: https://webdav.echo.stfc.ac.uk:1094/lsst:datadisk/raw/job_outputs/

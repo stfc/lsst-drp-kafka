@@ -6,6 +6,8 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     restart: always
+    networks: 
+      - lsst
 
   broker1:
     image: confluentinc/cp-kafka:latest
@@ -21,11 +23,13 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper1:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXT:PLAINTEXT,INT:PLAINTEXT
-      KAFKA_LISTENERS: EXT://0.0.0.0:9092,INT://0.0.0.0:29092
-      KAFKA_ADVERTISED_LISTENERS: EXT://130.246.80.239:9092,INT://broker1:29092
+      KAFKA_LISTENERS: EXT://broker1:9092,INT://broker1:29092
+      KAFKA_ADVERTISED_LISTENERS: EXT://broker1:9092,INT://broker1:29092
       KAFKA_LOG_RETENTION_HOURS: 168
       KAFKA_INTER_BROKER_LISTENER_NAME: INT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks: 
+      - lsst
 
   mirrormaker2:
     image: confluentinc/cp-kafka-connect:latest
@@ -42,9 +46,10 @@ services:
     volumes:
       - ./mm2.properties:/etc/kafka-connect/mm2.properties:ro
       - ./kafka-log4j.properties:/etc/kafka-connect/kafka-log4j.properties:ro
-
     environment:
       KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/etc/kafka-connect/kafka-log4j.properties
+    networks: 
+      - lsst
 
   ingestd:
     image: ghcr.io/lsst-dm/ctrl_ingestd:1.2
@@ -57,9 +62,13 @@ services:
       LSST_DB_AUTH: /etc/db-auth.yaml
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
     volumes:
-      - ./butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
+      - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
       - ./ingestd.yaml:/etc/ingestd.yaml:ro
       - /etc/db-auth.yaml:/etc/db-auth.yaml:ro
+      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
+      - /butler-repos/hsc_pdr2_multisite/butler.yaml:/etc/hsc_pdr2_multisite/butler.yaml
+    networks:
+      - lsst
 
   rest-proxy:
     image: confluentinc/cp-kafka-rest:latest
@@ -73,4 +82,10 @@ services:
     environment:
       KAFKA_REST_HOST_NAME: rest-proxy
       KAFKA_REST_BOOTSTRAP_SERVERS: 'broker1:29092'
-      KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
+      KAFKA_REST_LISTENERS: 'rest-proxy:8082'
+    networks: 
+      - lsst
+
+networks:
+  lsst:
+    driver: bridge
