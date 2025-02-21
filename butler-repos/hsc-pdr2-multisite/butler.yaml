@@ -4,7 +4,7 @@ datastore:
     table: file_datastore_records
   root: <butlerRoot>
 registry:
-  db: postgresql://ral_butler:lAWEl48S8r@dbspgha03.fds.rl.ac.uk:5432/ral_butler
+  db: postgresql://dbspgha03.fds.rl.ac.uk:5432/ral_butler
   managers:
     attributes: lsst.daf.butler.registry.attributes.DefaultButlerAttributeManager
     collections: lsst.daf.butler.registry.collections.synthIntKey.SynthIntKeyCollectionManager

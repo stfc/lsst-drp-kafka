@@ -66,7 +66,7 @@ services:
       - ./ingestd.yaml:/etc/ingestd.yaml:ro
       - /etc/db-auth.yaml:/etc/db-auth.yaml:ro
       - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
-      - /butler-repos/hsc_pdr2_multisite/butler.yaml:/etc/hsc_pdr2_multisite/butler.yaml
+      - /butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
     networks:
       - lsst
 
@@ -81,9 +81,9 @@ services:
     container_name: rest-proxy
     environment:
       KAFKA_REST_HOST_NAME: rest-proxy
-      KAFKA_REST_BOOTSTRAP_SERVERS: 'broker1:29092'
-      KAFKA_REST_LISTENERS: 'rest-proxy:8082'
-    networks: 
+      KAFKA_REST_BOOTSTRAP_SERVERS: broker1:9092
+      KAFKA_REST_LISTENERS: http://127.0.0.1:8082
+    networks:
       - lsst
 
 networks:
