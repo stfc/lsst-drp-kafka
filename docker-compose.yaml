@@ -70,6 +70,22 @@ services:
     networks:
       - lsst
 
+
+## Relevant links for the following container which is used for 
+## exporting performance metrics from Kafka to Prometheus
+# https://prometheus.github.io/jmx_exporter/
+# https://github.com/danielqsj/kafka_exporter
+# https://www.redpanda.com/guides/kafka-performance-kafka-monitoring
+
+  kafka-exporter:
+    image: danielqsj/kafka-exporter
+    container_name: kafka-exporter
+    command: ["--kafka.server=broker1:9092"]
+    ports:
+      - 9308:9308
+    networks:
+      - lsst
+
   # rest-proxy:
   #   image: confluentinc/cp-kafka-rest:latest
   #   ports:
