@@ -5,8 +5,9 @@ group_id: "ral_ingestd"
 num_messages: 50
 
 butler:
-  instrument: lsst.obs.subaru.HyperSuprimeCam
-  repo: hsc_pdr2_multisite
+  ## instrument doesn't need to be defined for IngestD 1.4 and above
+  # instrument: lsst.obs.subaru.HyperSuprimeCam
+  repo: ccms1
 
 rses:
   usdf.RAL_BUTLER_DISK:

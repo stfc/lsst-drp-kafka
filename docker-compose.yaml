@@ -6,7 +6,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     restart: always
-    networks: 
+    networks:
       - lsst
 
   broker1:
@@ -28,7 +28,7 @@ services:
       KAFKA_LOG_RETENTION_HOURS: 168
       KAFKA_INTER_BROKER_LISTENER_NAME: INT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    networks: 
+    networks:
       - lsst
 
   mirrormaker2:
@@ -48,34 +48,57 @@ services:
       - ./kafka-log4j.properties:/etc/kafka-connect/kafka-log4j.properties:ro
     environment:
       KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/etc/kafka-connect/kafka-log4j.properties
-    networks: 
+    networks:
       - lsst
 
-  ingestd:
-    image: ghcr.io/lsst-dm/ctrl_ingestd:1.2
-    container_name: ingestd
+  ingestd_hsc_pdr2_multisite:
+    image: ghcr.io/lsst-dm/ctrl_ingestd:1.5
+    container_name: ingestd_hsc_pdr2_multisite
     depends_on:
       - broker1
     restart: always
     environment:
-      CTRL_INGESTD_CONFIG: /etc/ingestd.yaml
-      LSST_DB_AUTH: /etc/db-auth.yaml
+      CTRL_INGESTD_CONFIG: /tmp/ingestd-configs/hsc_pdr2_multisite.yaml
+      LSST_DB_AUTH: /tmp/db-auth.yaml
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
     volumes:
       - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
-      - ./ingestd.yaml:/etc/ingestd.yaml:ro
-      - /etc/db-auth.yaml:/etc/db-auth.yaml:ro
+      - ./ingestd-configs/hsc_pdr2_multisite.yaml:/tmp/ingestd-configs/hsc_pdr2_multisite.yaml:ro
+      - ./ingestd-configs/ccms1.yaml:/tmp/ingestd-configs/ccms1.yaml:ro
+      - ./db-auth.yaml:/tmp/db-auth.yaml:ro
       - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
-      - /butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
+      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
+      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml
+    networks:
+      - lsst
+
+  ingestd_ccms1:
+    image: ghcr.io/lsst-dm/ctrl_ingestd:1.5
+    container_name: ingestd_ccms1
+    depends_on:
+      - broker1
+    restart: always
+    environment:
+      CTRL_INGESTD_CONFIG: /tmp/ingestd-configs/ccms1.yaml
+      LSST_DB_AUTH: /tmp/db-auth.yaml
+      DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
+    volumes:
+      - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
+      - ./ingestd-configs/hsc_pdr2_multisite.yaml:/tmp/ingestd-configs/hsc_pdr2_multisite.yaml:ro
+      - ./ingestd-configs/ccms1.yaml:/tmp/ingestd-configs/ccms1.yaml:ro
+      - ./db-auth.yaml:/tmp/db-auth.yaml:ro
+      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
+      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
+      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml
     networks:
       - lsst
 
 
-## Relevant links for the following container which is used for 
-## exporting performance metrics from Kafka to Prometheus
-# https://prometheus.github.io/jmx_exporter/
-# https://github.com/danielqsj/kafka_exporter
-# https://www.redpanda.com/guides/kafka-performance-kafka-monitoring
+  ## Relevant links for the following container which is used for
+  ## exporting performance metrics from Kafka to Prometheus
+  # https://prometheus.github.io/jmx_exporter/
+  # https://github.com/danielqsj/kafka_exporter
+  # https://www.redpanda.com/guides/kafka-performance-kafka-monitoring
 
   kafka-exporter:
     image: danielqsj/kafka-exporter
@@ -101,7 +124,7 @@ services:
   #     KAFKA_REST_LISTENERS: http://127.0.0.1:8082
   #   networks:
   #     - lsst
-
+  
 networks:
   lsst:
     driver: bridge
