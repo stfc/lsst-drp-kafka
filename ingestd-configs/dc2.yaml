@@ -1,0 +1,18 @@
+brokers: broker1:29092
+
+group_id: "ral_ingestd"
+
+num_messages: 50
+
+butler:
+  ## instrument doesn't need to be defined for IngestD 1.4 and above
+  # instrument: lsst.obs.subaru.HyperSuprimeCam
+  repo: panda-test-med-1
+
+rses:
+  usdf.RAL_BUTLER_DISK:
+    rucio_prefix: davs://xrootd.echo.stfc.ac.uk:1094/lsst:datadisk/butler/
+    fs_prefix: https://webdav.echo.stfc.ac.uk:1094/lsst:datadisk/butler/job_outputs/
+  usdf.RAL_RAW_DISK:
+    rucio_prefix: https://webdav.echo.stfc.ac.uk:1094/lsst:datadisk/raw/
+    fs_prefix: https://webdav.echo.stfc.ac.uk:1094/lsst:datadisk/raw/job_outputs/
