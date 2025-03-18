@@ -92,6 +92,31 @@ services:
       - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
       - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
       - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml
+      - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml
+      - ./ingestd-configs/dc2.yaml:/tmp/ingestd-configs/dc2.yaml
+    networks:
+      - lsst
+
+  ingestd_hsc_pdr2_multisite:
+    image: ghcr.io/lsst-dm/ctrl_ingestd:1.5
+    container_name: hsc_pdr2_multisite
+    depends_on:
+      - broker1
+    restart: always
+    environment:
+      CTRL_INGESTD_CONFIG: /tmp/ingestd-configs/hsc_pdr2_multisite.yaml
+      LSST_DB_AUTH: /tmp/db-auth.yaml
+      DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
+    volumes:
+      - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
+      - ./ingestd-configs/hsc_pdr2_multisite.yaml:/tmp/ingestd-configs/hsc_pdr2_multisite.yaml:ro
+      - ./ingestd-configs/ccms1.yaml:/tmp/ingestd-configs/ccms1.yaml:ro
+      - ./db-auth.yaml:/tmp/db-auth.yaml:ro
+      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
+      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
+      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml
+      - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml
+      - ./ingestd-configs/dc2.yaml:/tmp/ingestd-configs/dc2.yaml
     networks:
       - lsst
 
