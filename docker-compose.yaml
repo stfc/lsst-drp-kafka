@@ -1,123 +1,208 @@
+## Docker Compose File for Rubin-LSST DRP Messaging Stack
+
 services:
+  # Zookeeper service for managing Kafka brokers
   zookeeper1:
+    # Use the latest version of Confluent Zookeeper
     image: confluentinc/cp-zookeeper:latest
+    # Container name for Zookeeper
     container_name: zookeeper1
     environment:
+      # Port for Zookeeper client connections
       ZOOKEEPER_CLIENT_PORT: 2181
+      # Tick time for Zookeeper
       ZOOKEEPER_TICK_TIME: 2000
+    # Always restart the container on failure
     restart: always
+    # Healthcheck to ensure Zookeeper is running
+    healthcheck:
+      test: [ "CMD", "zookeeper-shell", "localhost:2181", "ls", "/" ]
+      interval: 10s
+      timeout: 10s
+      retries: 3
     networks:
+      # Attach to the 'lsst' network
       - lsst
 
+  # Kafka broker service
   broker1:
+    # Image for Kafka broker
+    # Use the latest version of Confluent Kafka
     image: confluentinc/cp-kafka:latest
+    # Container name for Kafka broker
     container_name: broker1
+    healthcheck:
+      # Disable health checks
+      test: [ "NONE" ]
+    # Hostname for Kafka broker
     hostname: broker1
     ports:
+      # External port mapping for Kafka broker
       - "9092:9092"
+      # Internal port mapping for inter-broker communication
       - "29092:29092"
     depends_on:
-      - zookeeper1
+      # Ensure Zookeeper starts & is running before Kafka broker
+      zookeeper1:
+        condition: service_healthy
     restart: always
     environment:
+      # Unique broker ID
       KAFKA_BROKER_ID: 1
+      # Zookeeper connection string
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper1:2181'
+      # Protocol mapping for listeners
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXT:PLAINTEXT,INT:PLAINTEXT
+      # Define listeners for external and internal communication
       KAFKA_LISTENERS: EXT://broker1:9092,INT://broker1:29092
+      # Advertised listeners for client connections
       KAFKA_ADVERTISED_LISTENERS: EXT://broker1:9092,INT://broker1:29092
+      # Log retention period in hours
       KAFKA_LOG_RETENTION_HOURS: 168
+      # Listener name for inter-broker communication
       KAFKA_INTER_BROKER_LISTENER_NAME: INT
+      # Replication factor for offsets topic
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
+      # Attach to the 'lsst' network
       - lsst
 
+  # Kafka MirrorMaker 2 service for replication
   mirrormaker2:
+    # Image for Kafka Connect (used by MirrorMaker 2)
+    # Use the latest version of Confluent Kafka Connect
     image: confluentinc/cp-kafka-connect:latest
+    # Container name for MirrorMaker 2
     container_name: mirrormaker2
     healthcheck:
+      # Disable health checks
       test: [ "NONE" ]
     depends_on:
-      - zookeeper1
-      - broker1
+      # Ensure Zookeeper and Kafka broker start before MirrorMaker 2
+      zookeeper1:
+        condition: service_healthy
+      broker1:
+        condition: service_started
     restart: always
     command:
+      # Command to start MirrorMaker 2 with configuration
       - /bin/connect-mirror-maker
       - /etc/kafka-connect/mm2.properties
     volumes:
+      # Mount MirrorMaker 2 configuration file
       - ./mm2.properties:/etc/kafka-connect/mm2.properties:ro
+      # Mount Log4j configuration file
       - ./kafka-log4j.properties:/etc/kafka-connect/kafka-log4j.properties:ro
     environment:
+      # Log4j configuration options
       KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/etc/kafka-connect/kafka-log4j.properties
     networks:
+      # Attach to the 'lsst' network
       - lsst
 
+  # IngestD service for DC2 dataset
   ingestd_dc2:
+    # Image for IngestD
+    # Pinned to v1.5 as at 18th March 2025
+    # Check Butler compatibility before updating version
     image: ghcr.io/lsst-dm/ctrl_ingestd:1.5
+    # Container name for IngestD DC2
     container_name: ingestd_dc2
     depends_on:
-      - broker1
+      # Ensure Kafka broker starts before IngestD
+      broker1:
+        condition: service_started
     restart: always
     environment:
+      # Configuration file for IngestD DC2
       CTRL_INGESTD_CONFIG: /tmp/ingestd-configs/dc2.yaml
+      # Database authentication file
       LSST_DB_AUTH: /tmp/db-auth.yaml
+      # Butler repository index file
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
     volumes:
+      # Mount various configuration and repository files
       - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
       - ./ingestd-configs/hsc_pdr2_multisite.yaml:/tmp/ingestd-configs/hsc_pdr2_multisite.yaml:ro
       - ./ingestd-configs/ccms1.yaml:/tmp/ingestd-configs/ccms1.yaml:ro
+      - ./ingestd-configs/dc2.yaml:/tmp/ingestd-configs/dc2.yaml:ro
       - ./db-auth.yaml:/tmp/db-auth.yaml:ro
       - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
       - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
       - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml
       - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml
-      - ./ingestd-configs/dc2.yaml:/tmp/ingestd-configs/dc2.yaml
     networks:
+      # Attach to the 'lsst' network
       - lsst
 
+  # IngestD service for CCMS1 dataset
   ingestd_ccms1:
+    # Image for IngestD
+    # Pinned to v1.5 as at 18th March 2025
+    # Check Butler compatibility before updating version
     image: ghcr.io/lsst-dm/ctrl_ingestd:1.5
+    # Container name for IngestD CCMS1
     container_name: ingestd_ccms1
     depends_on:
-      - broker1
+      # Ensure Kafka broker starts before IngestD
+      broker1:
+        condition: service_started
     restart: always
     environment:
+      # Configuration file for IngestD CCMS1
       CTRL_INGESTD_CONFIG: /tmp/ingestd-configs/ccms1.yaml
+      # Database authentication file
       LSST_DB_AUTH: /tmp/db-auth.yaml
+      # Butler repository index file
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
     volumes:
+      # Mount various configuration and repository files
       - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
       - ./ingestd-configs/hsc_pdr2_multisite.yaml:/tmp/ingestd-configs/hsc_pdr2_multisite.yaml:ro
       - ./ingestd-configs/ccms1.yaml:/tmp/ingestd-configs/ccms1.yaml:ro
+      - ./ingestd-configs/dc2.yaml:/tmp/ingestd-configs/dc2.yaml:ro
       - ./db-auth.yaml:/tmp/db-auth.yaml:ro
       - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
       - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
       - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml
       - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml
-      - ./ingestd-configs/dc2.yaml:/tmp/ingestd-configs/dc2.yaml
     networks:
+      # Attach to the 'lsst' network
       - lsst
 
+  # IngestD service for HSC PDR2 Multisite dataset
   ingestd_hsc_pdr2_multisite:
+    # Image for IngestD
+    # Pinned to v1.5 as at 18th March 2025
+    # Check Butler compatibility before updating version
     image: ghcr.io/lsst-dm/ctrl_ingestd:1.5
-    container_name: hsc_pdr2_multisite
+    # Container name for IngestD HSC PDR2 Multisite
+    container_name: ingestd_hsc_pdr2_multisite
     depends_on:
-      - broker1
+      # Ensure Kafka broker starts before IngestD
+      broker1:
+        condition: service_started
     restart: always
     environment:
+      # Configuration file for IngestD HSC PDR2 Multisite
       CTRL_INGESTD_CONFIG: /tmp/ingestd-configs/hsc_pdr2_multisite.yaml
+      # Database authentication file
       LSST_DB_AUTH: /tmp/db-auth.yaml
+      # Butler repository index file
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
     volumes:
+      # Mount various configuration and repository files
       - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
       - ./ingestd-configs/hsc_pdr2_multisite.yaml:/tmp/ingestd-configs/hsc_pdr2_multisite.yaml:ro
       - ./ingestd-configs/ccms1.yaml:/tmp/ingestd-configs/ccms1.yaml:ro
+      - ./ingestd-configs/dc2.yaml:/tmp/ingestd-configs/dc2.yaml:ro
       - ./db-auth.yaml:/tmp/db-auth.yaml:ro
       - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
       - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
       - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml
       - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml
-      - ./ingestd-configs/dc2.yaml:/tmp/ingestd-configs/dc2.yaml
     networks:
+      # Attach to the 'lsst' network
       - lsst
 
   ## Relevant links for the following container which is used for
@@ -126,13 +211,20 @@ services:
   # https://github.com/danielqsj/kafka_exporter
   # https://www.redpanda.com/guides/kafka-performance-kafka-monitoring
 
+  # Kafka Exporter for Prometheus metrics
   kafka-exporter:
+    # Image for Kafka Exporter
     image: danielqsj/kafka-exporter
+    # Container name for Kafka Exporter
     container_name: kafka-exporter
-    command: ["--kafka.server=broker1:9092"]
+    command:
+      # Command to connect Kafka Exporter to Kafka broker
+      - "--kafka.server=broker1:9092"
     ports:
+      # Port mapping for Kafka Exporter metrics
       - 9308:9308
     networks:
+      # Attach to the 'lsst' network
       - lsst
 
   # rest-proxy:
@@ -150,7 +242,8 @@ services:
   #     KAFKA_REST_LISTENERS: http://127.0.0.1:8082
   #   networks:
   #     - lsst
-  
+
 networks:
+  # Define the 'lsst' network with bridge driver
   lsst:
     driver: bridge
