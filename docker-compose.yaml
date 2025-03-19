@@ -32,8 +32,11 @@ services:
     # Container name for Kafka broker
     container_name: broker1
     healthcheck:
-      # Disable health checks
-      test: [ "NONE" ]
+      # Verify the broker is healthy by checking API versions
+      test: [ "CMD", "kafka-broker-api-versions", "--bootstrap-server", "broker1:9092" ]
+      interval: 10s
+      timeout: 10s
+      retries: 3
     # Hostname for Kafka broker
     hostname: broker1
     ports:
@@ -75,14 +78,14 @@ services:
     # Container name for MirrorMaker 2
     container_name: mirrormaker2
     healthcheck:
-      # Disable health checks
-      test: [ "NONE" ]
+      # No healthcheck for MirrorMaker 2
+      test: ["NONE"]
     depends_on:
       # Ensure Zookeeper and Kafka broker start before MirrorMaker 2
       zookeeper1:
         condition: service_healthy
       broker1:
-        condition: service_started
+        condition: service_healthy
     restart: always
     command:
       # Command to start MirrorMaker 2 with configuration
@@ -109,8 +112,11 @@ services:
     # Container name for IngestD DC2
     container_name: ingestd_dc2
     depends_on:
-      # Ensure Kafka broker starts before IngestD
+      # Ensure Kafka broker is healthy before IngestD
       broker1:
+        condition: service_healthy
+      # Ensure MirrorMaker 2 is running before IngestD
+      mirrormaker2:
         condition: service_started
     restart: always
     environment:
@@ -144,8 +150,11 @@ services:
     # Container name for IngestD CCMS1
     container_name: ingestd_ccms1
     depends_on:
-      # Ensure Kafka broker starts before IngestD
+      # Ensure Kafka broker is healthy before IngestD
       broker1:
+        condition: service_healthy
+      # Ensure MirrorMaker 2 is running before IngestD
+      mirrormaker2:
         condition: service_started
     restart: always
     environment:
@@ -179,8 +188,11 @@ services:
     # Container name for IngestD HSC PDR2 Multisite
     container_name: ingestd_hsc_pdr2_multisite
     depends_on:
-      # Ensure Kafka broker starts before IngestD
+      # Ensure Kafka broker is healthy before IngestD
       broker1:
+        condition: service_healthy
+      # Ensure MirrorMaker 2 is running before IngestD
+      mirrormaker2:
         condition: service_started
     restart: always
     environment:
@@ -227,21 +239,34 @@ services:
       # Attach to the 'lsst' network
       - lsst
 
-  # rest-proxy:
-  #   image: confluentinc/cp-kafka-rest:latest
-  #   ports:
-  #     - "8082:8082"
-  #   depends_on:
-  #     - zookeeper1
-  #     - broker1
-  #   hostname: rest-proxy
-  #   container_name: rest-proxy
-  #   environment:
-  #     KAFKA_REST_HOST_NAME: rest-proxy
-  #     KAFKA_REST_BOOTSTRAP_SERVERS: broker1:9092
-  #     KAFKA_REST_LISTENERS: http://127.0.0.1:8082
-  #   networks:
-  #     - lsst
+  # Rest proxy service for Kafka
+  rest-proxy:
+    # Image for Kafka REST Proxy
+    image: confluentinc/cp-kafka-rest:latest
+    ports:
+      # Port mapping for Kafka REST Proxy
+      - "8082:8082"
+    depends_on:
+    # Ensure Zookeeper and Kafka broker start before REST Proxy
+      - zookeeper1
+      - broker1
+    # Always restart the container on failure
+    restart: always
+    # Hostname for REST Proxy
+    hostname: rest-proxy
+    # Container name for REST Proxy
+    container_name: rest-proxy
+    # Environment variables for REST Proxy
+    environment:
+      # Hostname for Kafka broker
+      KAFKA_REST_HOST_NAME: rest-proxy
+      # Port for Kafka broker
+      KAFKA_REST_BOOTSTRAP_SERVERS: broker1:29092
+      # Listeners for REST Proxy
+      KAFKA_REST_LISTENERS: http://0.0.0.0:8082
+    networks:
+      # Attach to the 'lsst' network
+      - lsst
 
 networks:
   # Define the 'lsst' network with bridge driver
