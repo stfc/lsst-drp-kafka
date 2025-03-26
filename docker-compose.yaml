@@ -239,34 +239,34 @@ services:
       # Attach to the 'lsst' network
       - lsst
 
-  # Rest proxy service for Kafka
-  rest-proxy:
-    # Image for Kafka REST Proxy
-    image: confluentinc/cp-kafka-rest:latest
-    ports:
-      # Port mapping for Kafka REST Proxy
-      - "8082:8082"
-    depends_on:
-    # Ensure Zookeeper and Kafka broker start before REST Proxy
-      - zookeeper1
-      - broker1
-    # Always restart the container on failure
-    restart: always
-    # Hostname for REST Proxy
-    hostname: rest-proxy
-    # Container name for REST Proxy
-    container_name: rest-proxy
-    # Environment variables for REST Proxy
-    environment:
-      # Hostname for Kafka broker
-      KAFKA_REST_HOST_NAME: rest-proxy
-      # Port for Kafka broker
-      KAFKA_REST_BOOTSTRAP_SERVERS: broker1:29092
-      # Listeners for REST Proxy
-      KAFKA_REST_LISTENERS: http://0.0.0.0:8082
-    networks:
-      # Attach to the 'lsst' network
-      - lsst
+    # Kafka REST Proxy service
+    rest-proxy:
+      # Image for Kafka REST Proxy
+      image: confluentinc/cp-kafka-rest:latest
+      # Container name for Kafka REST Proxy
+      container_name: rest-proxy
+      ports:
+        # Port mapping for Kafka REST Proxy
+        - "8082:8082"
+      # Ensure Zookeeper and Kafka broker start before REST Proxy
+      depends_on:
+        - zookeeper1
+        - broker1
+      # Restart the container on failure
+      restart: always
+      # Hostname for Kafka REST Proxy
+      hostname: rest-proxy
+      # Environment variables for Kafka REST Proxy
+      environment:
+        # Kafka REST Proxy host name
+        KAFKA_REST_HOST_NAME: rest-proxy
+        # Kafka bootstrap servers for REST Proxy
+        KAFKA_REST_BOOTSTRAP_SERVERS: broker1:9092
+        # Listener for REST Proxy - important this is 0.0.0.0; why?
+        KAFKA_REST_LISTENERS: http://0.0.0.0:8082
+      networks:
+        # Attach to the 'lsst' network
+        - lsst
 
 networks:
   # Define the 'lsst' network with bridge driver
