@@ -9,7 +9,7 @@ butler:
   # instrument: lsst.obs.subaru.HyperSuprimeCam
   repo: ccms1
 
-rses:
+topics:
   usdf.RAL_BUTLER_DISK-ccms1:
     rucio_prefix: davs://xrootd.echo.stfc.ac.uk:1094/lsst:datadisk/butler/
     fs_prefix: https://webdav.echo.stfc.ac.uk:1094/lsst:datadisk/butler/job_outputs/
