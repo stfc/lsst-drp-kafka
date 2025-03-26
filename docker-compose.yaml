@@ -104,13 +104,12 @@ services:
       - lsst
 
   # IngestD service for DC2 dataset
-  ingestd_dc2:
+  ingestd_dc2_17:
     # Image for IngestD
-    # Pinned to v1.5 as at 18th March 2025
     # Check Butler compatibility before updating version
-    image: ghcr.io/lsst-dm/ctrl_ingestd:1.5
+    image: ghcr.io/lsst-dm/ctrl_ingestd:1.7
     # Container name for IngestD DC2
-    container_name: ingestd_dc2
+    container_name: ingestd_dc2_17
     depends_on:
       # Ensure Kafka broker is healthy before IngestD
       broker1:
@@ -142,13 +141,12 @@ services:
       - lsst
 
   # IngestD service for CCMS1 dataset
-  ingestd_ccms1:
+  ingestd_ccms1_17:
     # Image for IngestD
-    # Pinned to v1.5 as at 18th March 2025
     # Check Butler compatibility before updating version
-    image: ghcr.io/lsst-dm/ctrl_ingestd:1.5
+    image: ghcr.io/lsst-dm/ctrl_ingestd:1.7
     # Container name for IngestD CCMS1
-    container_name: ingestd_ccms1
+    container_name: ingestd_ccms1_17
     depends_on:
       # Ensure Kafka broker is healthy before IngestD
       broker1:
@@ -180,13 +178,12 @@ services:
       - lsst
 
   # IngestD service for HSC PDR2 Multisite dataset
-  ingestd_hsc_pdr2_multisite:
+  ingestd_hsc_pdr2_multisite_17:
     # Image for IngestD
-    # Pinned to v1.5 as at 18th March 2025
     # Check Butler compatibility before updating version
-    image: ghcr.io/lsst-dm/ctrl_ingestd:1.5
+    image: ghcr.io/lsst-dm/ctrl_ingestd:1.7
     # Container name for IngestD HSC PDR2 Multisite
-    container_name: ingestd_hsc_pdr2_multisite
+    container_name: ingestd_hsc_pdr2_multisite_17
     depends_on:
       # Ensure Kafka broker is healthy before IngestD
       broker1:
@@ -239,7 +236,7 @@ services:
       # Attach to the 'lsst' network
       - lsst
 
-    # Kafka REST Proxy service
+  # Kafka REST Proxy service
   rest-proxy:
     # Image for Kafka REST Proxy
     image: confluentinc/cp-kafka-rest:latest
