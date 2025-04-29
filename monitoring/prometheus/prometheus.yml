@@ -1,0 +1,24 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # - job_name: 'kafka_exporter'
+  #   static_configs:
+  #     - targets: ['<kafka_exporter_host>:<kafka_exporter_port>']
+
+  # - job_name: 'kafka'
+  #   scrape_interval: 10s
+  #   static_configs:
+  #     - targets: ['kafka-broker-1:9092', 'kafka-broker-2:9092', 'kafka-broker-3:9092']
+  #   metrics_path: /metrics
+
+# alerting:
+#   alertmanagers:
+#     - scheme: http
+#       static_configs:
+#         - targets: [ 'alertmanager:9093' ]
