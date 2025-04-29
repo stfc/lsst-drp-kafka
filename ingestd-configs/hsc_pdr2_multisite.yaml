@@ -9,10 +9,10 @@ butler:
   # instrument: lsst.obs.subaru.HyperSuprimeCam
   repo: hsc_pdr2_multisite
 
-rses:
-  usdf.RAL_BUTLER_DISK:
+topics:
+  usdf.RAL_BUTLER_DISK-hsc_pdr2_multisite:
     rucio_prefix: davs://xrootd.echo.stfc.ac.uk:1094/lsst:datadisk/butler/
     fs_prefix: https://webdav.echo.stfc.ac.uk:1094/lsst:datadisk/butler/job_outputs/
-  usdf.RAL_RAW_DISK:
+  usdf.RAL_RAW_DISK-hsc_pdr2_multisite:
     rucio_prefix: https://webdav.echo.stfc.ac.uk:1094/lsst:datadisk/raw/
     fs_prefix: https://webdav.echo.stfc.ac.uk:1094/lsst:datadisk/raw/job_outputs/

@@ -104,122 +104,10 @@ services:
       - lsst
 
   # IngestD service for DC2 dataset
-  ingestd_dc2_18:
-    # Image for IngestD
-    # Check Butler compatibility before updating version
-    image: ghcr.io/lsst-dm/ctrl_ingestd:1.8
-    # Container name for IngestD DC2
-    container_name: ingestd_dc2_18
-    depends_on:
-      # Ensure Kafka broker is healthy before IngestD
-      broker1:
-        condition: service_healthy
-      # Ensure MirrorMaker 2 is running before IngestD
-      mirrormaker2:
-        condition: service_started
-    restart: always
-    environment:
-      # Configuration file for IngestD DC2
-      CTRL_INGESTD_CONFIG: /tmp/ingestd-configs/dc2_17.yaml
-      # Database authentication file
-      LSST_DB_AUTH: /tmp/db-auth.yaml
-      # Butler repository index file
-      DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
-    volumes:
-      # Mount various configuration and repository files
-      - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
-      - ./ingestd-configs/hsc_pdr2_multisite_17.yaml:/tmp/ingestd-configs/hsc_pdr2_multisite_17.yaml:ro
-      - ./ingestd-configs/ccms1_17.yaml:/tmp/ingestd-configs/ccms1_17.yaml:ro
-      - ./ingestd-configs/dc2_17.yaml:/tmp/ingestd-configs/dc2_17.yaml:ro
-      - ./db-auth.yaml:/tmp/db-auth.yaml:ro
-      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
-      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
-      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml
-      - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml
-    networks:
-      # Attach to the 'lsst' network
-      - lsst
-
-  # IngestD service for CCMS1 dataset
-  ingestd_ccms1_18:
-    # Image for IngestD
-    # Check Butler compatibility before updating version
-    image: ghcr.io/lsst-dm/ctrl_ingestd:1.8
-    # Container name for IngestD CCMS1
-    container_name: ingestd_ccms1_18
-    depends_on:
-      # Ensure Kafka broker is healthy before IngestD
-      broker1:
-        condition: service_healthy
-      # Ensure MirrorMaker 2 is running before IngestD
-      mirrormaker2:
-        condition: service_started
-    restart: always
-    environment:
-      # Configuration file for IngestD CCMS1
-      CTRL_INGESTD_CONFIG: /tmp/ingestd-configs/ccms1_17.yaml
-      # Database authentication file
-      LSST_DB_AUTH: /tmp/db-auth.yaml
-      # Butler repository index file
-      DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
-    volumes:
-      # Mount various configuration and repository files
-      - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
-      - ./ingestd-configs/hsc_pdr2_multisite_17.yaml:/tmp/ingestd-configs/hsc_pdr2_multisite_17.yaml:ro
-      - ./ingestd-configs/ccms1_17.yaml:/tmp/ingestd-configs/ccms1_17.yaml:ro
-      - ./ingestd-configs/dc2_17.yaml:/tmp/ingestd-configs/dc2_17.yaml:ro
-      - ./db-auth.yaml:/tmp/db-auth.yaml:ro
-      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
-      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
-      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml
-      - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml
-    networks:
-      # Attach to the 'lsst' network
-      - lsst
-
-  # IngestD service for HSC PDR2 Multisite dataset
-  ingestd_hsc_pdr2_multisite_18:
-    # Image for IngestD
-    # Check Butler compatibility before updating version
-    image: ghcr.io/lsst-dm/ctrl_ingestd:1.8
-    # Container name for IngestD HSC PDR2 Multisite
-    container_name: ingestd_hsc_pdr2_multisite_18
-    depends_on:
-      # Ensure Kafka broker is healthy before IngestD
-      broker1:
-        condition: service_healthy
-      # Ensure MirrorMaker 2 is running before IngestD
-      mirrormaker2:
-        condition: service_started
-    restart: always
-    environment:
-      # Configuration file for IngestD HSC PDR2 Multisite
-      CTRL_INGESTD_CONFIG: /tmp/ingestd-configs/hsc_pdr2_multisite_17.yaml
-      # Database authentication file
-      LSST_DB_AUTH: /tmp/db-auth.yaml
-      # Butler repository index file
-      DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
-    volumes:
-      # Mount various configuration and repository files
-      - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
-      - ./ingestd-configs/hsc_pdr2_multisite_17.yaml:/tmp/ingestd-configs/hsc_pdr2_multisite_17.yaml:ro
-      - ./ingestd-configs/ccms1_17.yaml:/tmp/ingestd-configs/ccms1_17.yaml:ro
-      - ./ingestd-configs/dc2_17.yaml:/tmp/ingestd-configs/dc2_17.yaml:ro
-      - ./db-auth.yaml:/tmp/db-auth.yaml:ro
-      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
-      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
-      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml
-      - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml
-    networks:
-      # Attach to the 'lsst' network
-      - lsst
-
-  # IngestD service for DC2 dataset
   ingestd_dc2:
     # Image for IngestD
-    # Pinned to v1.5 as at 18th March 2025
     # Check Butler compatibility before updating version
-    image: ghcr.io/lsst-dm/ctrl_ingestd:1.5
+    image: ghcr.io/lsst-dm/ctrl_ingestd:1.9
     # Container name for IngestD DC2
     container_name: ingestd_dc2
     depends_on:
@@ -255,9 +143,8 @@ services:
   # IngestD service for CCMS1 dataset
   ingestd_ccms1:
     # Image for IngestD
-    # Pinned to v1.5 as at 18th March 2025
     # Check Butler compatibility before updating version
-    image: ghcr.io/lsst-dm/ctrl_ingestd:1.5
+    image: ghcr.io/lsst-dm/ctrl_ingestd:1.9
     # Container name for IngestD CCMS1
     container_name: ingestd_ccms1
     depends_on:
@@ -293,9 +180,8 @@ services:
   # IngestD service for HSC PDR2 Multisite dataset
   ingestd_hsc_pdr2_multisite:
     # Image for IngestD
-    # Pinned to v1.5 as at 18th March 2025
     # Check Butler compatibility before updating version
-    image: ghcr.io/lsst-dm/ctrl_ingestd:1.5
+    image: ghcr.io/lsst-dm/ctrl_ingestd:1.9
     # Container name for IngestD HSC PDR2 Multisite
     container_name: ingestd_hsc_pdr2_multisite
     depends_on:
