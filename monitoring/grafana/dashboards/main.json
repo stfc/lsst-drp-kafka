@@ -37,8 +37,8 @@
     },
     {
       "datasource": {
-        "type": "grafana-testdata-datasource",
-        "uid": "PA186000422FEAB85"
+        "type": "prometheus",
+        "uid": "PACA35AE2C051E365"
       },
       "description": "Should be 1 for proper functioning",
       "fieldConfig": {
@@ -85,10 +85,21 @@
       "pluginVersion": "11.6.1",
       "targets": [
         {
-          "max": 1,
-          "min": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "kafka_brokers",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
           "refId": "A",
-          "scenarioId": "random_walk"
+          "useBackend": false
         }
       ],
       "title": "Number of active controllers",
@@ -96,8 +107,8 @@
     },
     {
       "datasource": {
-        "type": "grafana-testdata-datasource",
-        "uid": "PA186000422FEAB85"
+        "type": "prometheus",
+        "uid": "PACA35AE2C051E365"
       },
       "description": "Should be 0 for proper functioning",
       "fieldConfig": {
@@ -144,10 +155,16 @@
       "pluginVersion": "11.6.1",
       "targets": [
         {
-          "max": 0,
-          "min": 0,
-          "refId": "A",
-          "scenarioId": "random_walk"
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
+          },
+          "editorMode": "code",
+          "expr": "sum(kafka_topic_partition_under_replicated_partition)",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
       "title": "Number of Under Replicated Partitions",
@@ -436,8 +453,7 @@
     },
     {
       "datasource": {
-        "type": "grafana-testdata-datasource",
-        "uid": "PA186000422FEAB85"
+        "uid": "PACA35AE2C051E365"
       },
       "fieldConfig": {
         "defaults": {
@@ -461,27 +477,25 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 10,
+        "h": 11,
+        "w": 9,
         "x": 0,
         "y": 18
       },
-      "id": 8,
+      "id": 26,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
+        "displayMode": "gradient",
         "legend": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "width": 420
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
         },
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
+        "maxVizHeight": 284,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "top",
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -489,30 +503,123 @@
           "fields": "",
           "values": false
         },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "text"
       },
       "pluginVersion": "11.6.1",
       "targets": [
         {
+          "editorMode": "code",
+          "expr": "kafka_topic_partitions{topic=\"__consumer_offsets\"}",
+          "legendFormat": "Consumer offsets",
+          "range": true,
+          "refId": "hello"
+        },
+        {
           "datasource": {
-            "uid": "${DS_PROMETHEUS_WH211}"
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
           },
-          "expr": "sum by(topic) (kafka_topic_partitions{instance=\"$instance\",topic=~\"$topic\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{topic}}",
+          "editorMode": "code",
+          "expr": "kafka_topic_partitions{topic=\"mm2-configs.source.internal\"}",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "mm2-configs",
+          "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
+          },
+          "editorMode": "code",
+          "expr": "kafka_topic_partitions{topic=\"mm2-status.source.internal\"}",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "mm2-status",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
+          },
+          "editorMode": "code",
+          "expr": "kafka_topic_partitions{topic=\"usdf.RAL_BUTLER_DISK-ccms1\"}",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "RAL butler disk: ccms1",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
+          },
+          "editorMode": "code",
+          "expr": "kafka_topic_partitions{topic=\"usdf.RAL_BUTLER_DISK-dc2\"}",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "RAL BUTLER DISK: dc2",
+          "range": true,
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
+          },
+          "editorMode": "code",
+          "expr": "kafka_topic_partitions{topic=\"usdf.RAL_BUTLER_DISK-hsc_pdr2_multisite\"}",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "RAL BUTLER DISK: hsc_pdr2_multisite",
+          "range": true,
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
+          },
+          "editorMode": "code",
+          "expr": "kafka_topic_partitions{topic=\"usdf.RAL_RAW_DISK\"}",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "RAL raw disk",
+          "range": true,
+          "refId": "F"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
+          },
+          "editorMode": "code",
+          "expr": "kafka_topic_partitions{topic=\"usdf.heartbeats\"}",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "Heartbeats",
+          "range": true,
+          "refId": "G"
         }
       ],
-      "title": "Partitions per Topic",
-      "type": "stat"
+      "title": "Number of partitions",
+      "type": "bargauge"
     },
     {
       "datasource": {
-        "type": "grafana-testdata-datasource",
-        "uid": "PA186000422FEAB85"
+        "type": "prometheus",
+        "uid": "PACA35AE2C051E365"
       },
       "fieldConfig": {
         "defaults": {
@@ -571,9 +678,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 10,
-        "x": 10,
+        "h": 11,
+        "w": 9,
+        "x": 9,
         "y": 18
       },
       "id": 12,
@@ -598,14 +705,14 @@
       "targets": [
         {
           "datasource": {
-            "uid": "${DS_PROMETHEUS_WH211}"
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
           },
-          "expr": "sum(kafka_consumergroup_lag{instance=\"$instance\",topic=~\"$topic\"}) by (consumergroup, topic) ",
-          "format": "time_series",
+          "editorMode": "code",
+          "expr": "sum(kafka_consumergroup_lag)",
           "instant": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{consumergroup}} (topic: {{topic}})",
+          "legendFormat": "__auto",
+          "range": true,
           "refId": "A"
         }
       ],
