@@ -9,19 +9,19 @@ services:
     image: confluentinc/cp-zookeeper:latest
     # Container name for Zookeeper
     container_name: zookeeper1
-    environment:
-      # Port for Zookeeper client connections
-      ZOOKEEPER_CLIENT_PORT: 2181
-      # Tick time for Zookeeper
-      ZOOKEEPER_TICK_TIME: 2000
-    # Always restart the container on failure
-    restart: always
     # Healthcheck to ensure Zookeeper is running
     healthcheck:
       test: [ "CMD", "zookeeper-shell", "localhost:2181", "ls", "/" ]
       interval: 10s
       timeout: 10s
       retries: 3
+    restart: always
+    environment:
+      # Port for Zookeeper client connections
+      ZOOKEEPER_CLIENT_PORT: 2181
+      # Tick time for Zookeeper
+      ZOOKEEPER_TICK_TIME: 2000
+    # Always restart the container on failure
     networks:
       # Attach to the 'lsst' network
       - lsst
@@ -243,9 +243,19 @@ services:
     image: danielqsj/kafka-exporter
     # Container name for Kafka Exporter
     container_name: kafka-exporter
+    # Restart the container on failure
+    restart: always
+    depends_on:
+      # Ensure Zookeeper and Kafka broker start before MirrorMaker 2
+      zookeeper1:
+        condition: service_healthy
+      # broker1:
+      #   condition: service_healthy
+      #   restart: true
     command:
       # Command to connect Kafka Exporter to Kafka broker
       - "--kafka.server=broker1:9092"
+      - "--log.level=debug"
     ports:
       # Port mapping for Kafka Exporter metrics
       - 9308:9308

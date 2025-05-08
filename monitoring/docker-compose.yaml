@@ -2,7 +2,7 @@ services:
   grafana:
     image: grafana/grafana-enterprise
     container_name: grafana
-    restart: unless-stopped
+    restart: always
     environment:
       - TERM=linux
       # increases the log level from info to debug
@@ -19,11 +19,14 @@ services:
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
+    restart: always
     ports:
       - '9090:9090'
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
     networks:
       - lsst
 
