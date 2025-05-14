@@ -40,11 +40,8 @@ services:
     # Container name for Kafka broker
     container_name: broker1
     healthcheck:
-      # Verify the broker is healthy by checking API versions
-      test: [ "CMD", "kafka-broker-api-versions", "--bootstrap-server", "broker1:9092" ]
-      interval: 10s
-      timeout: 10s
-      retries: 3
+      # No healthcheck for MirrorMaker 2
+      test: ["NONE"]
     # Hostname for Kafka broker
     hostname: broker1
     ports:
@@ -54,8 +51,7 @@ services:
       - "29092:29092"
     depends_on:
       # Ensure Zookeeper starts & is running before Kafka broker
-      zookeeper1:
-        condition: service_healthy
+      - zookeeper1
     restart: always
     environment:
       # Unique broker ID
@@ -98,8 +94,8 @@ services:
       # Ensure Zookeeper and Kafka broker start before MirrorMaker 2
       zookeeper1:
         condition: service_healthy
-      broker1:
-        condition: service_healthy
+      # broker1:
+      #   condition: service_healthy
     restart: always
     command:
       # Command to start MirrorMaker 2 with configuration
@@ -116,7 +112,7 @@ services:
       # Log4j configuration options
       KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/etc/kafka-connect/kafka-log4j.properties
       # Adding the prometheus JMX exporter as a java agent
-      KAFKA_OPTS: -javaagent:/usr/share/jmx_exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:/usr/share/jmx_exporter/kafka-connect.yml -Xmx256M -Xms256M
+      KAFKA_OPTS: -javaagent:/usr/share/jmx_exporter/jmx_prometheus_javaagent-1.2.0.jar=7071:/usr/share/jmx_exporter/kafka_jmx_config.yml -Xmx256M -Xms256M
     networks:
       # Attach to the 'lsst' network
       - lsst
