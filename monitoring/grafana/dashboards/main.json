@@ -62,7 +62,7 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 6,
+        "w": 8,
         "x": 0,
         "y": 1
       },
@@ -90,8 +90,8 @@
             "uid": "PACA35AE2C051E365"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "kafka_brokers",
+          "editorMode": "code",
+          "expr": "sum(kafka_controller_kafkacontroller_activecontrollercount)",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -132,8 +132,8 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 6,
-        "x": 6,
+        "w": 8,
+        "x": 8,
         "y": 1
       },
       "id": 23,
@@ -201,8 +201,8 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 6,
-        "x": 12,
+        "w": 8,
+        "x": 16,
         "y": 1
       },
       "id": 24,
@@ -230,7 +230,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "kafka_controller_offlinepartitionscount",
+          "expr": "sum(kafka_controller_kafkacontroller_offlinepartitionscount)",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -334,7 +334,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 7,
+        "w": 8,
         "x": 0,
         "y": 9
       },
@@ -464,7 +464,7 @@
       "gridPos": {
         "h": 8,
         "w": 8,
-        "x": 7,
+        "x": 8,
         "y": 9
       },
       "id": 28,
@@ -581,8 +581,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 7,
-        "x": 15,
+        "w": 8,
+        "x": 16,
         "y": 9
       },
       "id": 29,
@@ -798,7 +798,7 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 11,
+        "w": 12,
         "x": 12,
         "y": 18
       },
@@ -1002,7 +1002,7 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 11,
+        "w": 12,
         "x": 12,
         "y": 27
       },
@@ -1283,7 +1283,7 @@
       },
       "gridPos": {
         "h": 11,
-        "w": 11,
+        "w": 12,
         "x": 12,
         "y": 37
       },
@@ -1334,7 +1334,10 @@
     "list": [
       {
         "current": {},
-        "datasource": "${DS_PROMETHEUS_WH211}",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PACA35AE2C051E365"
+        },
         "includeAll": false,
         "label": "Job",
         "name": "job",
@@ -1346,7 +1349,10 @@
       },
       {
         "current": {},
-        "datasource": "${DS_PROMETHEUS_WH211}",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PACA35AE2C051E365"
+        },
         "includeAll": false,
         "label": "Instance",
         "name": "instance",
@@ -1358,7 +1364,10 @@
       },
       {
         "current": {},
-        "datasource": "${DS_PROMETHEUS_WH211}",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PACA35AE2C051E365"
+        },
         "includeAll": true,
         "label": "Topic",
         "multi": true,
@@ -1380,5 +1389,5 @@
   "timezone": "browser",
   "title": "Kafka Exporter Overview",
   "uid": "jwPKIsniz",
-  "version": 1
+  "version": 4
 }
