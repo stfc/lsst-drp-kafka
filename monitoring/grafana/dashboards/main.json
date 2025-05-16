@@ -40,7 +40,7 @@
         "type": "prometheus",
         "uid": "PACA35AE2C051E365"
       },
-      "description": "Should be 1 for proper functioning",
+      "description": "### Should be 1 for proper functioning\n\nThe active controller count metric indicates whether the broker is currently the controller for the cluster.\n\nThe metric will either be 0 or 1, with 1 showing that the broker is currently the controller (Since we have a single broker setup, this should always be 1).\n\n#### Possible reasons\n* At all times, only one broker should be the controller, and one broker must always be the controller in the cluster.<br><br>\n* If two brokers say that they are currently the controller, this means that you have a problem where a controller thread that should have exited has become stuck\n\n*Kafka the Definitive Guide*, Narkhede N., Shapira G., Palino T.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -62,7 +62,7 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 8,
+        "w": 5,
         "x": 0,
         "y": 1
       },
@@ -110,7 +110,7 @@
         "type": "prometheus",
         "uid": "PACA35AE2C051E365"
       },
-      "description": "Should be 0 for proper functioning",
+      "description": "### Should be 0 for proper functioning\n\nProvided on each broker in a cluster, gives a count of the number of partitions for which the broker is the leader replica, where the follower replicas are not caught up.\n\n#### Possible reasons\n* Steady (unchanging) value reported by many of the brokers in a cluster normally indicates that one of the brokers in the cluster is off‐line.<br><br>\n\n* If value is fluctuating, or if the number is steady but there are no brokers offline, this typically indicates a performance issue in the cluster.\n\n*Kafka the Definitive Guide*, Narkhede N., Shapira G., Palino T.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -132,8 +132,8 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 8,
-        "x": 8,
+        "w": 5,
+        "x": 5,
         "y": 1
       },
       "id": 23,
@@ -175,7 +175,7 @@
         "type": "prometheus",
         "uid": "PACA35AE2C051E365"
       },
-      "description": "Should be 0 for proper functioning",
+      "description": "### Should be 0 for proper functioning\n\nThis measurement is only provided by\nthe broker that is the controller for the cluster (all other brokers will report 0), and shows the number of partitions in the cluster that currently have no leader.\n\n#### Possible reasons\n* All brokers hosting replicas for this partition are down.<br><br>\n* No in-sync replica can take leadership due to message-count mismatches (with unclean leader election disabled).\n\n*Kafka the Definitive Guide*, Narkhede N., Shapira G., Palino T.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -201,8 +201,8 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 8,
-        "x": 16,
+        "w": 5,
+        "x": 10,
         "y": 1
       },
       "id": 24,
@@ -242,6 +242,103 @@
       ],
       "title": "Number of Offline Partitions",
       "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PACA35AE2C051E365"
+      },
+      "description": "The way consumers maintain membership in a consumer group and ownership of the partitions assigned to them is by sending heartbeats to a Kafka broker designated as the group coordinator.\n\nAs long as the consumer is sending heartbeats at regular intervals, it is assumed to be alive, well, and processing messages from its partitions. Heartbeats are sent when the consumer polls (i.e., retrieves records) and when it commits records it has consumed\n\n*Kafka the Definitive Guide*, Narkhede N., Shapira G., Palino T.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 23,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 3,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 9,
+        "x": 15,
+        "y": 1
+      },
+      "id": 35,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
+          },
+          "editorMode": "builder",
+          "expr": "rate(kafka_server_brokertopicmetrics_bytesin_total{job=\"prometheus-jmx-exporter\", topic=\"usdf.heartbeats\"}[$__rate_interval])",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{topic}} bytes in = ",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "USDF heartbeats bytes in",
+      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -344,7 +441,7 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "hideZeros": false,
@@ -365,7 +462,7 @@
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{label_name}}",
           "range": true,
           "refId": "A",
           "useBackend": false
@@ -473,7 +570,7 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "hideZeros": false,
@@ -591,7 +688,7 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "hideZeros": false,
@@ -722,12 +819,30 @@
             "uid": "PACA35AE2C051E365"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum without(instance) (rate(kafka_server_brokertopicmetrics_messagesin_total{job=\"prometheus-jmx-exporter\"}[5m]))",
+          "editorMode": "code",
+          "expr": "rate(kafka_server_brokertopicmetrics_messagesin_total{job=\"prometheus-jmx-exporter\", topic=~\".+\", topic!~\"usdf.heartbeats\"}[$__rate_interval])",
           "fullMetaSearch": false,
+          "hide": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{topic}}",
+          "range": true,
+          "refId": "E",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "rate(kafka_server_brokertopicmetrics_messagesin_total{job=\"prometheus-jmx-exporter\", topic=~\".+\", topic!~\"__consumer_offsets|mm2-configs.source.internal|mm2-offsets.source.internal|mm2-status.source.internal|usdf.heartbeats\"}[$__rate_interval])",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{topic}}",
           "range": true,
           "refId": "A",
           "useBackend": false
@@ -926,14 +1041,31 @@
             "uid": "PACA35AE2C051E365"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum without(instance) (rate(kafka_server_brokertopicmetrics_bytesin_total{job=\"prometheus-jmx-exporter\"}[5m]))",
+          "editorMode": "code",
+          "expr": "rate(kafka_server_brokertopicmetrics_bytesin_total{job=\"prometheus-jmx-exporter\", topic=~\".+\", topic!~\"usdf.heartbeats\"}[$__rate_interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{topic}}",
           "range": true,
           "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "rate(kafka_server_brokertopicmetrics_bytesin_total{job=\"prometheus-jmx-exporter\", topic=~\".+\", topic!~\"__consumer_offsets|mm2-configs.source.internal|mm2-offsets.source.internal|mm2-status.source.internal|usdf.heartbeats\"}[$__rate_interval])",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{topic}}",
+          "range": true,
+          "refId": "B",
           "useBackend": false
         }
       ],
@@ -1029,13 +1161,30 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum without(instance) (rate(kafka_server_brokertopicmetrics_bytesout_total{job=\"prometheus-jmx-exporter\"}[5m]))",
+          "expr": "rate(kafka_server_brokertopicmetrics_bytesout_total{job=\"prometheus-jmx-exporter\", topic=~\".+\", topic!~\"usdf.heartbeats\"}[$__rate_interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{topic}}",
           "range": true,
           "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "rate(kafka_server_brokertopicmetrics_bytesout_total{job=\"prometheus-jmx-exporter\", topic=~\".+\", topic!~\"usdf.heartbeats|mm2-configs.source.internal|mm2-offsets.source.internal|mm2-status.source.internal|__consumer_offsets\"}[$__rate_interval])",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{topic}}",
+          "range": true,
+          "refId": "B",
           "useBackend": false
         }
       ],
@@ -1059,6 +1208,7 @@
       "datasource": {
         "uid": "PACA35AE2C051E365"
       },
+      "description": "Messages in Kafka are categorized into topics. Topics are additionally broken down into a number of *partitions*. \n\nMessages are written to partitions in an append-only and messages are time ordered within partitions (not within topics). They can also be hosted on different servers which helps in scalability.\n\n*Kafka the Definitive Guide*, Narkhede N., Shapira G., Palino T.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1115,8 +1265,9 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "kafka_topic_partitions{topic=\"__consumer_offsets\"}",
-          "legendFormat": "Consumer offsets",
+          "expr": "kafka_topic_partitions{topic=~\".+\"}",
+          "hide": true,
+          "legendFormat": "{{topic}}",
           "range": true,
           "refId": "hello"
         },
@@ -1125,96 +1276,16 @@
             "type": "prometheus",
             "uid": "PACA35AE2C051E365"
           },
-          "editorMode": "code",
-          "expr": "kafka_topic_partitions{topic=\"mm2-configs.source.internal\"}",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "kafka_topic_partitions{topic=~\".+\", topic!~\"__consumer_offsets|mm2-configs.source.internal|mm2-offsets.source.internal|mm2-status.source.internal\"}",
+          "fullMetaSearch": false,
           "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "mm2-configs",
+          "includeNullMetadata": true,
+          "legendFormat": "{{topic}}",
           "range": true,
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PACA35AE2C051E365"
-          },
-          "editorMode": "code",
-          "expr": "kafka_topic_partitions{topic=\"mm2-status.source.internal\"}",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "mm2-status",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PACA35AE2C051E365"
-          },
-          "editorMode": "code",
-          "expr": "kafka_topic_partitions{topic=\"usdf.RAL_BUTLER_DISK-ccms1\"}",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "RAL butler disk: ccms1",
-          "range": true,
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PACA35AE2C051E365"
-          },
-          "editorMode": "code",
-          "expr": "kafka_topic_partitions{topic=\"usdf.RAL_BUTLER_DISK-dc2\"}",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "RAL BUTLER DISK: dc2",
-          "range": true,
-          "refId": "D"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PACA35AE2C051E365"
-          },
-          "editorMode": "code",
-          "expr": "kafka_topic_partitions{topic=\"usdf.RAL_BUTLER_DISK-hsc_pdr2_multisite\"}",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "RAL BUTLER DISK: hsc_pdr2_multisite",
-          "range": true,
-          "refId": "E"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PACA35AE2C051E365"
-          },
-          "editorMode": "code",
-          "expr": "kafka_topic_partitions{topic=\"usdf.RAL_RAW_DISK\"}",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "RAL raw disk",
-          "range": true,
-          "refId": "F"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PACA35AE2C051E365"
-          },
-          "editorMode": "code",
-          "expr": "kafka_topic_partitions{topic=\"usdf.heartbeats\"}",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Heartbeats",
-          "range": true,
-          "refId": "G"
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "Number of partitions",
@@ -1225,6 +1296,7 @@
         "type": "prometheus",
         "uid": "PACA35AE2C051E365"
       },
+      "description": "Consumer lag is the number of consumer offsets between the latest message produced in a partition and the last message consumed by a consumer, that is the number of messages pending to be consumed from a particular partition.\n\n#### Possible reasons\nA large consumer lag, or a quickly growing lag, indicates that the consumer is unable to read from a partition as fast as the messages are available. This can be caused by:\n* slow consumer\n* slow network, or \n* slow broker\n\n[Consumer lag - Confluent Apache Kafka Glossary](https://docs.confluent.io/cloud/current/_glossary.html#term-consumer-lag)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1333,7 +1405,10 @@
   "templating": {
     "list": [
       {
-        "current": {},
+        "current": {
+          "text": "",
+          "value": ""
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "PACA35AE2C051E365"
@@ -1348,7 +1423,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "",
+          "value": ""
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "PACA35AE2C051E365"
@@ -1363,7 +1441,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "PACA35AE2C051E365"
@@ -1382,12 +1463,12 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Kafka Exporter Overview",
   "uid": "jwPKIsniz",
-  "version": 4
+  "version": 1
 }
