@@ -1,7 +1,9 @@
 ## Docker Compose File for Rubin-LSST DRP Messaging Stack
 
+# Including the docker compose from monitoring to run monitoring services
 include:
-  - ./monitoring/docker-compose.yaml  
+  - ./monitoring/docker-compose.yaml
+
 services:
   # Zookeeper service for managing Kafka brokers
   zookeeper1:
