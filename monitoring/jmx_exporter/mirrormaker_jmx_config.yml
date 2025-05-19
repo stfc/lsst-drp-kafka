@@ -1,2 +1,0 @@
-# This config file introduces the Mirrormaker metrics to scrape using the Prometheus JMX exporter
-## Currently blank but will eventually be used for mirrormake health checks

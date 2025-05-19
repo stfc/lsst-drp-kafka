@@ -24,12 +24,6 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       # Tick time for Zookeeper
       ZOOKEEPER_TICK_TIME: 2000
-      # Adding the prometheus JMX exporter as a java agent
-      EXTRA_ARGS: -javaagent:/usr/share/jmx_exporter/jmx_prometheus_javaagent-1.2.0.jar=7071:/usr/share/jmx_exporter/zookeeper_jmx_config.yml
-      KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
-    volumes:
-      # Mount JMX exporter binary file
-      - ./monitoring/jmx_exporter:/usr/share/jmx_exporter/
     networks:
       # Attach to the 'lsst' network
       - lsst
@@ -72,12 +66,6 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: INT
       # Replication factor for offsets topic
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      # Adding the prometheus JMX exporter as a java agent
-      KAFKA_OPTS: -javaagent:/usr/share/jmx_exporter/jmx_prometheus_javaagent-1.2.0.jar=7071:/usr/share/jmx_exporter/kafka_jmx_config.yml
-      KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
-    volumes:
-      # Mount JMX exporter binary file
-      - ./monitoring/jmx_exporter:/usr/share/jmx_exporter/
     networks:
       # Attach to the 'lsst' network
       - lsst
@@ -108,13 +96,9 @@ services:
       - ./mm2.properties:/etc/kafka-connect/mm2.properties:ro
       # Mount Log4j configuration file
       - ./kafka-log4j.properties:/etc/kafka-connect/kafka-log4j.properties:ro
-      # Mount JMX exporter binary file
-      - ./monitoring/jmx_exporter:/usr/share/jmx_exporter/
     environment:
       # Log4j configuration options
       KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/etc/kafka-connect/kafka-log4j.properties
-      # Adding the prometheus JMX exporter as a java agent
-      KAFKA_OPTS: -javaagent:/usr/share/jmx_exporter/jmx_prometheus_javaagent-1.2.0.jar=7071:/usr/share/jmx_exporter/kafka_jmx_config.yml -Xmx256M -Xms256M
     networks:
       # Attach to the 'lsst' network
       - lsst
