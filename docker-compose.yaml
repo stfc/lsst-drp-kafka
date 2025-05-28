@@ -107,7 +107,7 @@ services:
   ingestd_dc2:
     # Image for IngestD
     # Check Butler compatibility before updating version
-    image: ghcr.io/lsst-dm/ctrl_ingestd:1.9
+    image: ghcr.io/lsst-dm/ctrl_ingestd:1.10
     # Container name for IngestD DC2
     container_name: ingestd_dc2
     depends_on:
@@ -144,7 +144,7 @@ services:
   ingestd_ccms1:
     # Image for IngestD
     # Check Butler compatibility before updating version
-    image: ghcr.io/lsst-dm/ctrl_ingestd:1.9
+    image: ghcr.io/lsst-dm/ctrl_ingestd:1.10
     # Container name for IngestD CCMS1
     container_name: ingestd_ccms1
     depends_on:
@@ -181,7 +181,7 @@ services:
   ingestd_hsc_pdr2_multisite:
     # Image for IngestD
     # Check Butler compatibility before updating version
-    image: ghcr.io/lsst-dm/ctrl_ingestd:1.9
+    image: ghcr.io/lsst-dm/ctrl_ingestd:1.10
     # Container name for IngestD HSC PDR2 Multisite
     container_name: ingestd_hsc_pdr2_multisite
     depends_on:
