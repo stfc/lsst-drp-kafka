@@ -1,0 +1,52 @@
+# The configuration file to define
+
+receivers:
+  # Utilising the jmx receiver provided by the OpenTelemetry Collector commuity contributions
+  # Link to the receiver: 
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/jmxreceiver/README.md
+  #
+  jmx/jvm:
+    jar_path: /opt/opentelemetry-jmx-metrics.jar
+    endpoint: service:jmx:rmi:///jndi/rmi://broker1:9101/jmxrmi
+    target_system: jvm
+    collection_interval: 10s
+
+  jmx/kafka:
+    jar_path: /opt/opentelemetry-jmx-metrics.jar
+    endpoint: service:jmx:rmi:///jndi/rmi://broker1:9101/jmxrmi
+    target_system: kafka
+    collection_interval: 10s
+
+  # Utilising the kafka metrics receiver provided by the OpenTelemetry Collector commuity contributions
+  # Link to the receiver: 
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/kafkametricsreceiver/README.md
+  #
+  kafkametrics:
+    # protocol_version: "3.9.0"
+    brokers: ["broker1:9092"]
+    # Metric scrapers to enable
+    scrapers:
+      - brokers
+      - topics
+      - consumers
+
+processors:
+  batch:
+    timeout: 10s
+
+exporters:
+  debug:
+    verbosity: detailed
+    sampling_initial: 5
+    sampling_thereafter: 200
+  
+  prometheus:
+    # Expose on port 8889 for Prometheus scraping
+    endpoint: "0.0.0.0:8889"
+
+service:
+  pipelines:
+    metrics:
+      receivers: [jmx/jvm, jmx/kafka, kafkametrics]
+      processors: [batch]
+      exporters: [prometheus]

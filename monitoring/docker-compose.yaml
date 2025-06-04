@@ -51,6 +51,34 @@ services:
       # Attach to the 'lsst' network
       - lsst
 
+  otel-collector:
+    # Use the latest version of OpenTelemetry community contributions collector
+    image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    # Always restart the container on failure
+    restart: always
+    # Command to link the config file to the OpenTelemetry collector
+    command: 
+      - "--config=/etc/otel-collector-contrib/config.yaml"
+    depends_on:
+      # Ensure Zookeeper starts & is running before Kafka broker
+      - broker1
+    ports:
+      - '8889:8889' # Prometheus endpoint
+    environment:
+      - TMPDIR=/otel-tmp
+    volumes:
+      # Mount OpenTelemetry collector
+      - ./opentelemetry-collector/otel-collector-config.yaml:/etc/otel-collector-contrib/config.yaml:ro
+      # Mount JMX exporter binary file
+      - ./opentelemetry-collector/opentelemetry-jmx-metrics.jar:/opt/opentelemetry-jmx-metrics.jar:ro
+      # Temp data volume for the JMX receiver
+      - otel-temp-data:/otel-tmp
+      - ./jmx-temp:/otel-tmp/jmx
+    networks:
+      # Attach to the 'lsst' network
+      - lsst
+
   # alertmanager:
   #   image: prom/alertmanager:latest
   #   restart: unless-stopped
@@ -69,4 +97,7 @@ volumes:
 
   # Volume for additional grafana data stored
   prometheus-data: {}
+
+  # Volume for temp file data for the JMX receiver
+  otel-temp-data: {}
   # alertmanager-data: {}
