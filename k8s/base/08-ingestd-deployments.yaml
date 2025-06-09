@@ -1,0 +1,410 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingestd-dc2
+  namespace: lsst-drp
+  labels:
+    app: ingestd-dc2
+    component: ingestd
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: ingestd-dc2
+  template:
+    metadata:
+      labels:
+        app: ingestd-dc2
+        component: ingestd
+    spec:
+      serviceAccountName: ingestd-service-account
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: ingestd
+        image: ghcr.io/lsst-dm/ctrl_ingestd:1.10
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: CTRL_INGESTD_CONFIG
+          value: /tmp/ingestd-configs/dc2.yaml
+        - name: LSST_DB_AUTH
+          value: /tmp/db-auth.yaml
+        - name: DAF_BUTLER_REPOSITORY_INDEX
+          value: /etc/butler-repos-index.yaml
+        resources:
+          requests:
+            memory: 1Gi
+            cpu: 500m
+          limits:
+            memory: 2Gi
+            cpu: 1000m
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - "ps aux | grep '[i]ngestd' || exit 1"
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - "ps aux | grep '[i]ngestd' || exit 1"
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        volumeMounts:
+        - name: ingestd-configs
+          mountPath: /tmp/ingestd-configs
+          readOnly: true
+        - name: butler-repos-index
+          mountPath: /etc/butler-repos-index.yaml
+          subPath: butler-repos-index.yaml
+          readOnly: true
+        - name: butler-repos-panda
+          mountPath: /etc/panda-test-med-1-lancs/butler.yaml
+          subPath: panda-test-med-1-lancs-butler.yaml
+          readOnly: true
+        - name: butler-repos-hsc
+          mountPath: /etc/hsc-pdr2-multisite/butler.yaml
+          subPath: hsc-pdr2-multisite-butler.yaml
+          readOnly: true
+        - name: butler-repos-ccms1
+          mountPath: /etc/ccms1/butler.yaml
+          subPath: ccms1-butler.yaml
+          readOnly: true
+        - name: butler-repos-dc2
+          mountPath: /etc/panda-test-med-1/butler.yaml
+          subPath: dc2-butler.yaml
+          readOnly: true
+        - name: db-auth
+          mountPath: /tmp/db-auth.yaml
+          subPath: db-auth.yaml
+          readOnly: true
+      volumes:
+      - name: ingestd-configs
+        configMap:
+          name: ingestd-configs
+      - name: butler-repos-index
+        configMap:
+          name: butler-repos-index
+      - name: butler-repos-panda
+        configMap:
+          name: butler-repos
+          items:
+          - key: panda-test-med-1-lancs-butler.yaml
+            path: panda-test-med-1-lancs-butler.yaml
+      - name: butler-repos-hsc
+        configMap:
+          name: butler-repos
+          items:
+          - key: hsc-pdr2-multisite-butler.yaml
+            path: hsc-pdr2-multisite-butler.yaml
+      - name: butler-repos-ccms1
+        configMap:
+          name: butler-repos
+          items:
+          - key: ccms1-butler.yaml
+            path: ccms1-butler.yaml
+      - name: butler-repos-dc2
+        configMap:
+          name: butler-repos
+          items:
+          - key: dc2-butler.yaml
+            path: dc2-butler.yaml
+      - name: db-auth
+        secret:
+          secretName: db-auth
+      nodeSelector:
+        node-type: compute
+      tolerations:
+      - key: "compute-node"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingestd-ccms1
+  namespace: lsst-drp
+  labels:
+    app: ingestd-ccms1
+    component: ingestd
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: ingestd-ccms1
+  template:
+    metadata:
+      labels:
+        app: ingestd-ccms1
+        component: ingestd
+    spec:
+      serviceAccountName: ingestd-service-account
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: ingestd
+        image: ghcr.io/lsst-dm/ctrl_ingestd:1.10
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: CTRL_INGESTD_CONFIG
+          value: /tmp/ingestd-configs/ccms1.yaml
+        - name: LSST_DB_AUTH
+          value: /tmp/db-auth.yaml
+        - name: DAF_BUTLER_REPOSITORY_INDEX
+          value: /etc/butler-repos-index.yaml
+        resources:
+          requests:
+            memory: 1Gi
+            cpu: 500m
+          limits:
+            memory: 2Gi
+            cpu: 1000m
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - "ps aux | grep '[i]ngestd' || exit 1"
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - "ps aux | grep '[i]ngestd' || exit 1"
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        volumeMounts:
+        - name: ingestd-configs
+          mountPath: /tmp/ingestd-configs
+          readOnly: true
+        - name: butler-repos-index
+          mountPath: /etc/butler-repos-index.yaml
+          subPath: butler-repos-index.yaml
+          readOnly: true
+        - name: butler-repos-panda
+          mountPath: /etc/panda-test-med-1-lancs/butler.yaml
+          subPath: panda-test-med-1-lancs-butler.yaml
+          readOnly: true
+        - name: butler-repos-hsc
+          mountPath: /etc/hsc-pdr2-multisite/butler.yaml
+          subPath: hsc-pdr2-multisite-butler.yaml
+          readOnly: true
+        - name: butler-repos-ccms1
+          mountPath: /etc/ccms1/butler.yaml
+          subPath: ccms1-butler.yaml
+          readOnly: true
+        - name: butler-repos-dc2
+          mountPath: /etc/panda-test-med-1/butler.yaml
+          subPath: dc2-butler.yaml
+          readOnly: true
+        - name: db-auth
+          mountPath: /tmp/db-auth.yaml
+          subPath: db-auth.yaml
+          readOnly: true
+      volumes:
+      - name: ingestd-configs
+        configMap:
+          name: ingestd-configs
+      - name: butler-repos-index
+        configMap:
+          name: butler-repos-index
+      - name: butler-repos-panda
+        configMap:
+          name: butler-repos
+          items:
+          - key: panda-test-med-1-lancs-butler.yaml
+            path: panda-test-med-1-lancs-butler.yaml
+      - name: butler-repos-hsc
+        configMap:
+          name: butler-repos
+          items:
+          - key: hsc-pdr2-multisite-butler.yaml
+            path: hsc-pdr2-multisite-butler.yaml
+      - name: butler-repos-ccms1
+        configMap:
+          name: butler-repos
+          items:
+          - key: ccms1-butler.yaml
+            path: ccms1-butler.yaml
+      - name: butler-repos-dc2
+        configMap:
+          name: butler-repos
+          items:
+          - key: dc2-butler.yaml
+            path: dc2-butler.yaml
+      - name: db-auth
+        secret:
+          secretName: db-auth
+      nodeSelector:
+        node-type: compute
+      tolerations:
+      - key: "compute-node"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingestd-hsc-pdr2-multisite
+  namespace: lsst-drp
+  labels:
+    app: ingestd-hsc-pdr2-multisite
+    component: ingestd
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: ingestd-hsc-pdr2-multisite
+  template:
+    metadata:
+      labels:
+        app: ingestd-hsc-pdr2-multisite
+        component: ingestd
+    spec:
+      serviceAccountName: ingestd-service-account
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: ingestd
+        image: ghcr.io/lsst-dm/ctrl_ingestd:1.10
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: CTRL_INGESTD_CONFIG
+          value: /tmp/ingestd-configs/hsc_pdr2_multisite.yaml
+        - name: LSST_DB_AUTH
+          value: /tmp/db-auth.yaml
+        - name: DAF_BUTLER_REPOSITORY_INDEX
+          value: /etc/butler-repos-index.yaml
+        resources:
+          requests:
+            memory: 1Gi
+            cpu: 500m
+          limits:
+            memory: 2Gi
+            cpu: 1000m
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - "ps aux | grep '[i]ngestd' || exit 1"
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - "ps aux | grep '[i]ngestd' || exit 1"
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        volumeMounts:
+        - name: ingestd-configs
+          mountPath: /tmp/ingestd-configs
+          readOnly: true
+        - name: butler-repos-index
+          mountPath: /etc/butler-repos-index.yaml
+          subPath: butler-repos-index.yaml
+          readOnly: true
+        - name: butler-repos-panda
+          mountPath: /etc/panda-test-med-1-lancs/butler.yaml
+          subPath: panda-test-med-1-lancs-butler.yaml
+          readOnly: true
+        - name: butler-repos-hsc
+          mountPath: /etc/hsc-pdr2-multisite/butler.yaml
+          subPath: hsc-pdr2-multisite-butler.yaml
+          readOnly: true
+        - name: butler-repos-ccms1
+          mountPath: /etc/ccms1/butler.yaml
+          subPath: ccms1-butler.yaml
+          readOnly: true
+        - name: butler-repos-dc2
+          mountPath: /etc/panda-test-med-1/butler.yaml
+          subPath: dc2-butler.yaml
+          readOnly: true
+        - name: db-auth
+          mountPath: /tmp/db-auth.yaml
+          subPath: db-auth.yaml
+          readOnly: true
+      volumes:
+      - name: ingestd-configs
+        configMap:
+          name: ingestd-configs
+      - name: butler-repos-index
+        configMap:
+          name: butler-repos-index
+      - name: butler-repos-panda
+        configMap:
+          name: butler-repos
+          items:
+          - key: panda-test-med-1-lancs-butler.yaml
+            path: panda-test-med-1-lancs-butler.yaml
+      - name: butler-repos-hsc
+        configMap:
+          name: butler-repos
+          items:
+          - key: hsc-pdr2-multisite-butler.yaml
+            path: hsc-pdr2-multisite-butler.yaml
+      - name: butler-repos-ccms1
+        configMap:
+          name: butler-repos
+          items:
+          - key: ccms1-butler.yaml
+            path: ccms1-butler.yaml
+      - name: butler-repos-dc2
+        configMap:
+          name: butler-repos
+          items:
+          - key: dc2-butler.yaml
+            path: dc2-butler.yaml
+      - name: db-auth
+        secret:
+          secretName: db-auth
+      nodeSelector:
+        node-type: compute
+      tolerations:
+      - key: "compute-node"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"

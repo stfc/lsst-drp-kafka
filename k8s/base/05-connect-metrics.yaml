@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: connect-metrics
+  namespace: lsst-drp
+data:
+  connect-metrics-config.yml: |
+    # Kafka Connect JMX metrics configuration for Prometheus
+    rules:
+    - pattern: kafka.connect<type=(.+), client-id=(.+)><>(.+)
+      name: kafka_connect_$1_$3
+      type: GAUGE
+      labels:
+        client_id: "$2"
+    - pattern: kafka.connect<type=(.+)><>(.+)
+      name: kafka_connect_$1_$2
+      type: GAUGE

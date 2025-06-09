@@ -1,0 +1,85 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaMirrorMaker2
+metadata:
+  name: mirrormaker2
+  namespace: lsst-drp
+spec:
+  version: 3.6.0
+  replicas: 2
+  connectCluster: "target"
+  clusters:
+    - alias: "source"
+      bootstrapServers: "134.79.23.189:9094"
+      config:
+        config.storage.replication.factor: 3
+        offset.storage.replication.factor: 3
+        status.storage.replication.factor: 3
+        config.storage.topic: mm2-configs
+        offset.storage.topic: mm2-offsets
+        status.storage.topic: mm2-status
+    - alias: "target"
+      bootstrapServers: "lsst-kafka-cluster-kafka-bootstrap:9092"
+      config:
+        config.storage.replication.factor: 3
+        offset.storage.replication.factor: 3
+        status.storage.replication.factor: 3
+        config.storage.topic: mm2-configs
+        offset.storage.topic: mm2-offsets
+        status.storage.topic: mm2-status
+  mirrors:
+    - sourceCluster: "source"
+      targetCluster: "target"
+      sourceConnector:
+        tasksMax: 4
+        config:
+          replication.factor: 3
+          offset-syncs.topic.replication.factor: 3
+          sync.topic.acls.enabled: "false"
+          topics: "RAL_.*"
+          topics.exclude: ".*[\\-\\.]internal,.*\\.replica,__consumer_offsets"
+          groups.exclude: "console-consumer-.*,connect-.*,__.*"
+          emit.heartbeats.enabled: false
+          emit.checkpoints.enabled: false
+          sync.topic.configs.enabled: true
+          key.converter: "org.apache.kafka.connect.converters.ByteArrayConverter"
+          value.converter: "org.apache.kafka.connect.converters.ByteArrayConverter"
+          refresh.topics.enabled: true
+          refresh.topics.interval.seconds: 600
+          refresh.groups.enabled: true
+          refresh.groups.interval.seconds: 600
+      heartbeatConnector:
+        config:
+          emit.heartbeats.enabled: false
+      checkpointConnector:
+        config:
+          emit.checkpoints.enabled: false
+          sync.group.offsets.enabled: true
+          sync.group.offsets.interval.seconds: 60
+          emit.checkpoints.interval.seconds: 60
+  resources:
+    requests:
+      memory: 2Gi
+      cpu: 500m
+    limits:
+      memory: 4Gi
+      cpu: 1000m
+  jvmOptions:
+    -Xms1g
+    -Xmx2g
+  metricsConfig:
+    type: jmxPrometheusExporter
+    valueFrom:
+      configMapKeyRef:
+        name: connect-metrics
+        key: connect-metrics-config.yml
+  logging:
+    type: inline
+    loggers:
+      log4j.rootLogger: "INFO, stdout"
+      log4j.appender.stdout: "org.apache.log4j.ConsoleAppender"
+      log4j.appender.stdout.layout: "org.apache.log4j.PatternLayout"
+      log4j.appender.stdout.layout.ConversionPattern: "[%d] %p %m (%c)%n"
+      log4j.logger.org.reflections: "ERROR"
+      log4j.logger.org.apache.zookeeper: "ERROR"
+      log4j.logger.org.I0Itec.zkclient: "ERROR"
+      log4j.logger.org.apache.kafka.connect.mirror: "DEBUG"

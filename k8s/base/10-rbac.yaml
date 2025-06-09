@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ingestd-service-account
+  namespace: lsst-drp
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: lsst-drp
+  name: ingestd-role
+rules:
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ingestd-role-binding
+  namespace: lsst-drp
+subjects:
+- kind: ServiceAccount
+  name: ingestd-service-account
+  namespace: lsst-drp
+roleRef:
+  kind: Role
+  name: ingestd-role
+  apiGroup: rbac.authorization.k8s.io

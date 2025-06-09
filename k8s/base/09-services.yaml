@@ -1,0 +1,146 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rest-proxy
+  namespace: lsst-drp
+  labels:
+    app: rest-proxy
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: rest-proxy
+  template:
+    metadata:
+      labels:
+        app: rest-proxy
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: rest-proxy
+        image: confluentinc/cp-kafka-rest:7.5.0
+        ports:
+        - containerPort: 8082
+          name: rest-proxy
+        env:
+        - name: KAFKA_REST_HOST_NAME
+          value: rest-proxy
+        - name: KAFKA_REST_BOOTSTRAP_SERVERS
+          value: lsst-kafka-cluster-kafka-bootstrap:9092
+        - name: KAFKA_REST_LISTENERS
+          value: http://0.0.0.0:8082
+        - name: KAFKA_REST_SCHEMA_REGISTRY_URL
+          value: http://schema-registry:8081
+        resources:
+          requests:
+            memory: 512Mi
+            cpu: 200m
+          limits:
+            memory: 1Gi
+            cpu: 500m
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8082
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8082
+          initialDelaySeconds: 10
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rest-proxy
+  namespace: lsst-drp
+  labels:
+    app: rest-proxy
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8082
+    targetPort: 8082
+    name: rest-proxy
+  selector:
+    app: rest-proxy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-exporter-external
+  namespace: lsst-drp
+  labels:
+    app: kafka-exporter-external
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-exporter-external
+  template:
+    metadata:
+      labels:
+        app: kafka-exporter-external
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: kafka-exporter
+        image: danielqsj/kafka-exporter:v1.7.0
+        args:
+        - "--kafka.server=lsst-kafka-cluster-kafka-bootstrap:9092"
+        - "--web.listen-address=:9308"
+        - "--log.level=info"
+        ports:
+        - containerPort: 9308
+          name: metrics
+        resources:
+          requests:
+            memory: 64Mi
+            cpu: 100m
+          limits:
+            memory: 128Mi
+            cpu: 200m
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 9308
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 9308
+          initialDelaySeconds: 10
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-exporter-external
+  namespace: lsst-drp
+  labels:
+    app: kafka-exporter-external
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9308"
+    prometheus.io/path: "/metrics"
+spec:
+  ports:
+  - port: 9308
+    targetPort: 9308
+    name: metrics
+  selector:
+    app: kafka-exporter-external

@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-metrics
+  namespace: lsst-drp
+data:
+  kafka-metrics-config.yml: |
+    # Kafka JMX metrics configuration for Prometheus
+    rules:
+    - pattern: kafka.server<type=(.+), name=(.+)PerSec, topic=(.+)><>Count
+      name: kafka_server_$1_$2_total
+      type: COUNTER
+      labels:
+        topic: "$3"
+    - pattern: kafka.server<type=(.+), name=(.+)PerSec><>Count
+      name: kafka_server_$1_$2_total
+      type: COUNTER
+    - pattern: kafka.server<type=(.+), name=(.+), topic=(.+), partition=(.+)><>Value
+      name: kafka_server_$1_$2
+      type: GAUGE
+      labels:
+        topic: "$3"
+        partition: "$4"
+    - pattern: kafka.server<type=(.+), name=(.+)><>Value
+      name: kafka_server_$1_$2
+      type: GAUGE
+    - pattern: kafka.controller<type=(.+), name=(.+)><>Value
+      name: kafka_controller_$1_$2
+      type: GAUGE
+    - pattern: kafka.network<type=(.+), name=(.+)><>Value
+      name: kafka_network_$1_$2
+      type: GAUGE
