@@ -1,13 +1,11 @@
-brokers: broker1:29092
+brokers:
+  - broker1:29092
 
 group_id: "ral_ingestd"
 
 num_messages: 50
 
-butler:
-  ## instrument doesn't need to be defined for IngestD 1.4 and above
-  # instrument: lsst.obs.subaru.HyperSuprimeCam
-  repo: panda-test-med-1
+butler_repo: panda-test-med-1
 
 topics:
   usdf.RAL_BUTLER_DISK-dc2:
