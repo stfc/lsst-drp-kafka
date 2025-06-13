@@ -32,7 +32,7 @@ services:
   broker1:
     # Image for Kafka broker
     # Use the latest version of Confluent Kafka
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.5.0
     # Container name for Kafka broker
     container_name: broker1
     healthcheck:
@@ -71,12 +71,13 @@ services:
       # JMX PORT ASSIGNMENT
       KAFKA_JMX_PORT: 9101
       KAFKA_JMX_HOSTNAME: broker1
-      KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote \
-                       -Dcom.sun.management.jmxremote.authenticate=false \
-                       -Dcom.sun.management.jmxremote.ssl=false \
-                       -Dcom.sun.management.jmxremote.port=9101 \
-                       -Dcom.sun.management.jmxremote.rmi.port=9101 \
-                       -Djava.rmi.server.hostname=broker1"
+      KAFKA_JMX_OPTS: >
+        -Dcom.sun.management.jmxremote
+        -Dcom.sun.management.jmxremote.authenticate=false
+        -Dcom.sun.management.jmxremote.ssl=false
+        -Dcom.sun.management.jmxremote.port=9101
+        -Dcom.sun.management.jmxremote.rmi.port=9101
+        -Djava.rmi.server.hostname=broker1
     volumes:
       # Mount JMX exporter binary file
       - ./monitoring/opentelemetry-collector/opentelemetry-jmx-metrics.jar:/opt/opentelemetry-jmx-metrics.jar:ro

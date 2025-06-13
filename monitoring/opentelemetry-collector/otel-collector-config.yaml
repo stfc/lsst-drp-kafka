@@ -4,23 +4,17 @@ receivers:
   # Utilising the jmx receiver provided by the OpenTelemetry Collector commuity contributions
   # Link to the receiver: 
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/jmxreceiver/README.md
-  #
-  jmx/jvm:
-    jar_path: /opt/opentelemetry-jmx-metrics.jar
-    endpoint: service:jmx:rmi:///jndi/rmi://broker1:9101/jmxrmi
-    target_system: jvm
-    collection_interval: 10s
 
-  jmx/kafka:
+  jmx:
     jar_path: /opt/opentelemetry-jmx-metrics.jar
     endpoint: service:jmx:rmi:///jndi/rmi://broker1:9101/jmxrmi
-    target_system: kafka
+    target_system: "jvm,kafka" # Important: These must have no whitespace between them
     collection_interval: 10s
 
   # Utilising the kafka metrics receiver provided by the OpenTelemetry Collector commuity contributions
   # Link to the receiver: 
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/kafkametricsreceiver/README.md
-  #
+
   kafkametrics:
     # protocol_version: "3.9.0"
     brokers: ["broker1:9092"]
@@ -39,7 +33,7 @@ exporters:
     verbosity: detailed
     sampling_initial: 5
     sampling_thereafter: 200
-  
+
   prometheus:
     # Expose on port 8889 for Prometheus scraping
     endpoint: "0.0.0.0:8889"
@@ -47,6 +41,6 @@ exporters:
 service:
   pipelines:
     metrics:
-      receivers: [jmx/jvm, jmx/kafka, kafkametrics]
+      receivers: [jmx]
       processors: [batch]
       exporters: [prometheus]
