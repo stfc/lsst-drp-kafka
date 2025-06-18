@@ -1,6 +1,6 @@
 # Creating a builder container to extract the binary file into an alpine image
 # The collector image is present at /otelcontribcol
-FROM ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:latest AS builder
+FROM otel/opentelemetry-collector-contrib:latest AS builder
 
 # Set a parent alpine image
 FROM alpine:latest
@@ -10,7 +10,6 @@ RUN apk add --no-cache \
             openjdk17-jre-headless \
             ca-certificates \
             bash \
-            wget \
         && mkdir -p /tmp /opt \
         && chmod 1777 /tmp
 

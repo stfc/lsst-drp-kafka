@@ -1,9 +1,9 @@
 # The configuration file to define
 
 receivers:
-  # Utilising the jmx receiver provided by the OpenTelemetry Collector commuity contributions
-  # Link to the receiver: 
-  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/jmxreceiver/README.md
+  # The jmx receiver in the community contributions OpenTelemetry Collector
+  # Link to the receiver:
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/jmxreceiver
 
   jmx:
     jar_path: /opt/opentelemetry-jmx-metrics.jar
@@ -11,12 +11,11 @@ receivers:
     target_system: "jvm,kafka" # Important: These must have no whitespace between them
     collection_interval: 10s
 
-  # Utilising the kafka metrics receiver provided by the OpenTelemetry Collector commuity contributions
-  # Link to the receiver: 
-  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/kafkametricsreceiver/README.md
+  # The kafka metrics receiver in the community contributions OpenTelemetry Collector
+  # Link to the receiver:
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/kafkametricsreceiver
 
   kafkametrics:
-    # protocol_version: "3.9.0"
     brokers: ["broker1:9092"]
     # Metric scrapers to enable
     scrapers:
