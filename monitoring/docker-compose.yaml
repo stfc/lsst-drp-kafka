@@ -53,10 +53,12 @@ services:
 
   otel-collector:
     container_name: otel-collector
+    build:
+      context: ./opentelemetry/otel-collector
     # Always restart the container on failure
     restart: always
-    build:
-      context: ./opentelemetry-collector
+    depends_on:
+      - broker1
     networks:
       # Attach to the 'lsst' network
       - lsst
@@ -80,6 +82,5 @@ volumes:
   # Volume for additional grafana data stored
   prometheus-data: {}
 
-  # Volume for temp file data for the JMX receiver
-  # otel-temp-data: {}
+  # Volume for alertmanager data
   # alertmanager-data: {}

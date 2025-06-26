@@ -82,7 +82,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -91,7 +91,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum(kafka_controller_kafkacontroller_activecontrollercount)",
+          "expr": "sum(kafka_controller_active_count)",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -152,19 +152,23 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PACA35AE2C051E365"
           },
-          "editorMode": "code",
-          "expr": "sum(kafka_server_replicamanager_underreplicatedpartitions)",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "sum(kafka_partition_underReplicated)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "Number of Under Replicated Partitions",
@@ -221,7 +225,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -229,8 +233,8 @@
             "uid": "PACA35AE2C051E365"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "sum(kafka_controller_kafkacontroller_offlinepartitionscount)",
+          "editorMode": "builder",
+          "expr": "sum(kafka_partition_offline)",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -321,20 +325,24 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PACA35AE2C051E365"
           },
+          "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "rate(kafka_server_brokertopicmetrics_bytesin_total{job=\"prometheus-jmx-exporter\", topic=\"usdf.heartbeats\"}[$__rate_interval])",
+          "expr": "rate(kafka_server_brokertopicmetrics_bytesin_total{topic=\"usdf.heartbeats\"}[$__rate_interval])",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "instant": false,
           "interval": "",
           "legendFormat": "{{topic}} bytes in = ",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "USDF heartbeats bytes in",
@@ -449,7 +457,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -458,7 +466,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "rate(process_cpu_seconds_total{job=\"prometheus-jmx-exporter\"}[1m])",
+          "expr": "rate(jvm_cpu_time_seconds_total[10m])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -568,9 +576,9 @@
       "options": {
         "legend": {
           "calcs": [],
-          "displayMode": "list",
+          "displayMode": "table",
           "placement": "bottom",
-          "showLegend": false
+          "showLegend": true
         },
         "tooltip": {
           "hideZeros": false,
@@ -578,7 +586,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -587,11 +595,11 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum without(area) (jvm_memory_used_bytes{job=\"prometheus-jmx-exporter\"})",
+          "expr": "sum without(area) (jvm_memory_used_bytes)",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{jvm_memory_pool_name}}",
           "range": true,
           "refId": "A",
           "useBackend": false
@@ -696,7 +704,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -705,7 +713,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum without(gc) (rate(jvm_gc_collection_seconds_sum{job=\"prometheus-jmx-exporter\"}[5m]))",
+          "expr": "sum without(gc) (rate(jvm_gc_duration_seconds_sum[5m]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -811,7 +819,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -819,10 +827,10 @@
             "uid": "PACA35AE2C051E365"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
+          "editorMode": "builder",
           "expr": "rate(kafka_server_brokertopicmetrics_messagesin_total{job=\"prometheus-jmx-exporter\", topic=~\".+\", topic!~\"usdf.heartbeats\"}[$__rate_interval])",
           "fullMetaSearch": false,
-          "hide": false,
+          "hide": true,
           "includeNullMetadata": true,
           "instant": false,
           "legendFormat": "{{topic}}",
@@ -837,14 +845,14 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "rate(kafka_server_brokertopicmetrics_messagesin_total{job=\"prometheus-jmx-exporter\", topic=~\"$topic\", topic!~\"usdf.heartbeats\"}[$__rate_interval])",
+          "expr": "rate(kafka_message_count_total{topic=~\".+\", topic!=\"usdf.heartbeats\"}[10m])",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
           "instant": false,
           "legendFormat": "{{topic}}",
           "range": true,
-          "refId": "Filtered messages in per topic",
+          "refId": "A",
           "useBackend": false
         }
       ],
@@ -931,7 +939,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -1033,7 +1041,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -1153,7 +1161,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -1263,7 +1271,7 @@
         "sizing": "auto",
         "valueMode": "text"
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {
@@ -1367,7 +1375,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.0.1+security-01",
       "targets": [
         {
           "datasource": {

@@ -1,0 +1,58 @@
+# The configuration file to define
+
+receivers:
+  # The OpenTelemetry Protocol (otlp) receiver in the OpenTelemetry Collector
+  # Link: https://github.com/open-telemetry/opentelemetry-collector/tree/main/receiver/otlpreceiver
+
+  otlp:
+    protocols:
+      grpc:
+        endpoint: "0.0.0.0:4317"
+      http:
+        endpoint: "0.0.0.0:4318"
+
+  # The kafka metrics receiver in the community contributions OpenTelemetry Collector
+  # Link: https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/kafkametricsreceiver
+
+  kafkametrics:
+    brokers: ["broker1:9092"]
+    # Metric scrapers to enable
+    scrapers:
+      - brokers
+      - topics
+      - consumers
+
+
+processors:
+  # Batch processor to place metrics into batches based on size and timeout. 
+  # Link: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/prometheusexporter
+
+  batch:
+
+
+exporters:
+  # The Debug exporter in the OpenTelemetry Collector (This might be removed later since it is unnecessary)
+  # Link: https://github.com/open-telemetry/opentelemetry-collector/tree/main/exporter/debugexporter
+
+  debug:
+    verbosity: detailed
+    sampling_initial: 5
+    sampling_thereafter: 200
+
+  # The Prometheus exporter in the community contributions OpenTelemetry Collector
+  # Link: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/prometheusexporter
+
+  prometheus:
+    # Expose on port 8889 for Prometheus scraping
+    endpoint: "0.0.0.0:8889"
+    # Ensures all resource attributes are converted to metric labels by default
+    resource_to_telemetry_conversion:
+      enabled: true
+
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp,kafkametrics]
+      processors: [batch]
+      exporters: [prometheus,debug]
