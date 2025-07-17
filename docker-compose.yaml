@@ -38,7 +38,7 @@ services:
   broker1:
     # Image for Kafka broker
     # Use the latest version of Confluent Kafka
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.9.0
     # Container name for Kafka broker
     container_name: broker1
     healthcheck:
