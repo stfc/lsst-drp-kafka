@@ -61,8 +61,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 5,
+        "h": 7,
+        "w": 4,
         "x": 0,
         "y": 1
       },
@@ -130,9 +130,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 5,
-        "x": 5,
+        "h": 7,
+        "w": 4,
+        "x": 4,
         "y": 1
       },
       "id": 23,
@@ -198,9 +198,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 5,
-        "x": 10,
+        "h": 7,
+        "w": 4,
+        "x": 8,
         "y": 1
       },
       "id": 24,
@@ -301,9 +301,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 9,
-        "x": 15,
+        "h": 7,
+        "w": 7,
+        "x": 12,
         "y": 1
       },
       "id": 35,
@@ -340,12 +340,91 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "uid": "PACA35AE2C051E365"
+      },
+      "description": "Messages in Kafka are categorized into topics. Topics are additionally broken down into a number of *partitions*. \n\nMessages are written to partitions in an append-only and messages are time ordered within partitions (not within topics). They can also be hosted on different servers which helps in scalability.\n\n*Kafka the Definitive Guide*, Narkhede N., Shapira G., Palino T.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 5,
+        "x": 19,
+        "y": 1
+      },
+      "id": 26,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 284,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "top",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "text"
+      },
+      "pluginVersion": "12.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PACA35AE2C051E365"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "kafka_topic_partitions{topic=~\"$topic\"}",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "legendFormat": "{{topic}}",
+          "range": true,
+          "refId": "Filtered partitions per topic",
+          "useBackend": false
+        }
+      ],
+      "title": "Number of partitions",
+      "type": "bargauge"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 6
+        "y": 8
       },
       "id": 33,
       "panels": [],
@@ -432,7 +511,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 7
+        "y": 9
       },
       "id": 36,
       "options": {
@@ -558,7 +637,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 7
+        "y": 9
       },
       "id": 28,
       "options": {
@@ -677,7 +756,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 7
+        "y": 9
       },
       "id": 29,
       "options": {
@@ -796,7 +875,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 15
+        "y": 17
       },
       "id": 39,
       "options": {
@@ -925,7 +1004,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 15
+        "y": 17
       },
       "id": 37,
       "options": {
@@ -1044,7 +1123,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 15
+        "y": 17
       },
       "id": 38,
       "options": {
@@ -1163,7 +1242,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 25
       },
       "id": 40,
       "options": {
@@ -1208,7 +1287,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 31
+        "y": 33
       },
       "id": 20,
       "panels": [],
@@ -1279,7 +1358,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 32
+        "y": 34
       },
       "id": 30,
       "options": {
@@ -1382,7 +1461,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 32
+        "y": 34
       },
       "id": 31,
       "options": {
@@ -1484,7 +1563,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 41
+        "y": 43
       },
       "id": 32,
       "options": {
@@ -1587,7 +1666,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 41
+        "y": 43
       },
       "id": 34,
       "options": {
@@ -1690,7 +1769,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 50
+        "y": 52
       },
       "id": 41,
       "options": {
@@ -1810,7 +1889,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 50
+        "y": 52
       },
       "id": 42,
       "options": {
@@ -1855,7 +1934,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 59
+        "y": 61
       },
       "id": 21,
       "panels": [],
@@ -1864,27 +1943,62 @@
     },
     {
       "datasource": {
+        "type": "prometheus",
         "uid": "PACA35AE2C051E365"
       },
-      "description": "Messages in Kafka are categorized into topics. Topics are additionally broken down into a number of *partitions*. \n\nMessages are written to partitions in an append-only and messages are time ordered within partitions (not within topics). They can also be hosted on different servers which helps in scalability.\n\n*Kafka the Definitive Guide*, Narkhede N., Shapira G., Palino T.",
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 40,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
-          }
+          },
+          "unit": "bytes"
         },
         "overrides": []
       },
@@ -1892,32 +2006,21 @@
         "h": 11,
         "w": 12,
         "x": 0,
-        "y": 60
+        "y": 62
       },
-      "id": 26,
+      "id": 43,
       "options": {
-        "displayMode": "gradient",
         "legend": {
           "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
         },
-        "maxVizHeight": 284,
-        "minVizHeight": 16,
-        "minVizWidth": 8,
-        "namePlacement": "top",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showUnfilled": true,
-        "sizing": "auto",
-        "valueMode": "text"
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
       },
       "pluginVersion": "12.0.0",
       "targets": [
@@ -1928,18 +2031,18 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "kafka_topic_partitions{topic=~\"$topic\"}",
+          "expr": "kafka_log_log_size{job=\"prometheus-jmx-exporter\", topic=~\"$topic\", topic!=\"usdf.heartbeats\"}",
           "fullMetaSearch": false,
-          "hide": false,
           "includeNullMetadata": true,
-          "legendFormat": "{{topic}}",
+          "instant": false,
+          "legendFormat": "topic: {{topic}} / partition: {{partition}}",
           "range": true,
-          "refId": "Filtered partitions per topic",
+          "refId": "Consumer group lag",
           "useBackend": false
         }
       ],
-      "title": "Number of partitions",
-      "type": "bargauge"
+      "title": "Log size",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -2007,7 +2110,7 @@
         "h": 11,
         "w": 12,
         "x": 12,
-        "y": 60
+        "y": 62
       },
       "id": 12,
       "options": {
@@ -2044,113 +2147,10 @@
       ],
       "title": "Lag by  Consumer Group",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PACA35AE2C051E365"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 40,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 2,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 24,
-        "x": 0,
-        "y": 71
-      },
-      "id": 43,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PACA35AE2C051E365"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "kafka_log_log_size{job=\"prometheus-jmx-exporter\", topic=~\"$topic\", topic!=\"usdf.heartbeats\"}",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "topic: {{topic}} / partition: {{partition}}",
-          "range": true,
-          "refId": "Consumer group lag",
-          "useBackend": false
-        }
-      ],
-      "title": "Log size",
-      "type": "timeseries"
     }
   ],
   "preload": false,
-  "refresh": "5s",
+  "refresh": "30s",
   "schemaVersion": 41,
   "tags": [
     "Kafka"
