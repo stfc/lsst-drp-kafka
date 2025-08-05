@@ -2,7 +2,7 @@ datastore:
   cls: lsst.daf.butler.datastores.fileDatastore.FileDatastore
   records:
     table: file_datastore_records
-  root: <butlerRoot>
+  root: https://webdav.echo.stfc.ac.uk:1094/lsst:datadisk/butler/repos/ccms1/
 registry:
   db: postgresql://dbspgha03.fds.rl.ac.uk:5432/ral_butler
   managers:

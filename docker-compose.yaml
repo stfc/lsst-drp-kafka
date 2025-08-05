@@ -1,5 +1,3 @@
-## Docker Compose File for Rubin-LSST DRP Messaging Stack
-
 services:
   # Zookeeper service for managing Kafka brokers
   zookeeper1:
@@ -119,12 +117,15 @@ services:
         condition: service_started
     restart: always
     environment:
-      # Configuration file for IngestD DC2
+      # Configuration file for IngestD HSC PDR2 Multisite
       CTRL_INGESTD_CONFIG: /tmp/ingestd-configs/dc2.yaml
       # Database authentication file
       LSST_DB_AUTH: /tmp/db-auth.yaml
       # Butler repository index file
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
+      LSST_HTTP_CACERT_BUNDLE: /etc/grid-security/certificates/
+      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u1000
+      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u1000
     volumes:
       # Mount various configuration and repository files
       - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
@@ -132,10 +133,12 @@ services:
       - ./ingestd-configs/ccms1.yaml:/tmp/ingestd-configs/ccms1.yaml:ro
       - ./ingestd-configs/dc2.yaml:/tmp/ingestd-configs/dc2.yaml:ro
       - ./db-auth.yaml:/tmp/db-auth.yaml:ro
-      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
-      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
-      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml
-      - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml
+      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml:ro
+      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml:ro
+      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml:ro
+      - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml:ro
+      - /etc/grid-security/certificates:/etc/grid-security/certificates:ro
+      - /tmp/x509up_u35505:/tmp/x509up_u1000:ro
     networks:
       # Attach to the 'lsst' network
       - lsst
@@ -156,12 +159,15 @@ services:
         condition: service_started
     restart: always
     environment:
-      # Configuration file for IngestD CCMS1
+      # Configuration file for IngestD HSC PDR2 Multisite
       CTRL_INGESTD_CONFIG: /tmp/ingestd-configs/ccms1.yaml
       # Database authentication file
       LSST_DB_AUTH: /tmp/db-auth.yaml
       # Butler repository index file
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
+      LSST_HTTP_CACERT_BUNDLE: /etc/grid-security/certificates/
+      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u1000
+      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u1000
     volumes:
       # Mount various configuration and repository files
       - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
@@ -169,10 +175,12 @@ services:
       - ./ingestd-configs/ccms1.yaml:/tmp/ingestd-configs/ccms1.yaml:ro
       - ./ingestd-configs/dc2.yaml:/tmp/ingestd-configs/dc2.yaml:ro
       - ./db-auth.yaml:/tmp/db-auth.yaml:ro
-      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
-      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
-      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml
-      - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml
+      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml:ro
+      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml:ro
+      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml:ro
+      - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml:ro
+      - /etc/grid-security/certificates:/etc/grid-security/certificates:ro
+      - /tmp/x509up_u35505:/tmp/x509up_u1000:ro
     networks:
       # Attach to the 'lsst' network
       - lsst
@@ -199,6 +207,9 @@ services:
       LSST_DB_AUTH: /tmp/db-auth.yaml
       # Butler repository index file
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
+      LSST_HTTP_CACERT_BUNDLE: /etc/grid-security/certificates/
+      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u1000
+      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u1000
     volumes:
       # Mount various configuration and repository files
       - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
@@ -206,10 +217,12 @@ services:
       - ./ingestd-configs/ccms1.yaml:/tmp/ingestd-configs/ccms1.yaml:ro
       - ./ingestd-configs/dc2.yaml:/tmp/ingestd-configs/dc2.yaml:ro
       - ./db-auth.yaml:/tmp/db-auth.yaml:ro
-      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml
-      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml
-      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml
-      - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml
+      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml:ro
+      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml:ro
+      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml:ro
+      - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml:ro
+      - /etc/grid-security/certificates:/etc/grid-security/certificates:ro
+      - /tmp/x509up_u35505:/tmp/x509up_u1000:ro
     networks:
       # Attach to the 'lsst' network
       - lsst
