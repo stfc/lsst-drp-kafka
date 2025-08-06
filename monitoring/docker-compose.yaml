@@ -83,22 +83,9 @@ services:
       # Attach to the 'lsst' network
       - lsst
 
-  # alertmanager:
-  #   image: prom/alertmanager:latest
-  #   restart: unless-stopped
-  #   ports:
-  #     - '9093:9093'
-  #   volumes:
-  #     - ./alertmanager:/config
-  #     - alertmanager-data:/data
-  #   command: --config.file=/config/alertmanager.yml --log.level=debug
-  #   networks:
-  #     - monitoring
-
 volumes:
   # Volume for additional grafana data stored
   grafana-data: {}
 
   # Volume for additional grafana data stored
   prometheus-data: {}
-  # alertmanager-data: {}
