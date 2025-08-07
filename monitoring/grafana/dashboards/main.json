@@ -53,7 +53,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               }
             ]
           }
@@ -82,7 +83,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -122,7 +123,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               }
             ]
           }
@@ -151,7 +153,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -186,7 +188,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -219,7 +222,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -292,7 +295,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               }
             ]
           },
@@ -320,15 +324,15 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "PACA35AE2C051E365"
           },
-          "editorMode": "code",
-          "expr": "irate(kafka_server_brokertopicmetrics_bytesin_total{job=\"prometheus-jmx-exporter\", topic=\"usdf.heartbeats\"}[1m])",
+          "editorMode": "builder",
+          "expr": "irate(kafka_server_brokertopicmetrics_bytesin_total{job=\"lsst-prometheus-jmx-exporter\", topic=\"usdf.heartbeats\"}[1m])",
           "instant": false,
           "interval": "",
           "legendFormat": "{{topic}} bytes in = ",
@@ -354,7 +358,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -396,7 +401,7 @@
         "sizing": "auto",
         "valueMode": "text"
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -479,7 +484,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -526,7 +532,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -535,7 +541,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "rate(process_cpu_seconds_total{job=\"prometheus-jmx-exporter\"}[5m])",
+          "expr": "rate(process_cpu_seconds_total{job=\"lsst-prometheus-jmx-exporter\"}[5m])",
           "fullMetaSearch": false,
           "includeNullMetadata": false,
           "instant": false,
@@ -596,7 +602,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               }
             ]
           },
@@ -655,7 +662,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -664,7 +671,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "jvm_memory_used_bytes{job=\"prometheus-jmx-exporter\", area=\"heap\"}",
+          "expr": "jvm_memory_used_bytes{job=\"lsst-prometheus-jmx-exporter\", area=\"heap\"}",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -726,7 +733,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               }
             ]
           },
@@ -785,7 +793,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -793,13 +801,13 @@
             "uid": "PACA35AE2C051E365"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "(jvm_memory_used_bytes{job=\"prometheus-jmx-exporter\", area=\"heap\"} * 100) / jvm_memory_max_bytes{job=\"prometheus-jmx-exporter\", area=\"heap\"}",
+          "editorMode": "code",
+          "expr": "(jvm_memory_used_bytes{job=\"lsst-prometheus-jmx-exporter\", area=\"heap\"} * 100) / jvm_memory_max_bytes{job=\"lsst-prometheus-jmx-exporter\", area=\"heap\"}",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "area: {{area}}",
+          "legendFormat": "__auto",
           "range": true,
           "refId": "A",
           "useBackend": false
@@ -856,7 +864,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -904,7 +913,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -913,7 +922,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(gc) (rate(jvm_gc_collection_seconds_sum{job=\"prometheus-jmx-exporter\"}[5m])) * 100",
+          "expr": "sum by(gc) (rate(jvm_gc_collection_seconds_sum{job=\"lsst-prometheus-jmx-exporter\"}[5m])) * 100",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -975,7 +984,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               }
             ]
           },
@@ -1034,7 +1044,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -1043,7 +1053,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum(rate(kafka_server_kafkaserver_linux_disk_write_bytes{job=\"prometheus-jmx-exporter\"}[5m]))",
+          "expr": "sum(rate(kafka_server_kafkaserver_linux_disk_write_bytes{job=\"lsst-prometheus-jmx-exporter\"}[5m]))",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -1105,7 +1115,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1153,7 +1164,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -1162,7 +1173,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum(rate(kafka_server_kafkaserver_linux_disk_read_bytes{job=\"prometheus-jmx-exporter\"}[5m]))",
+          "expr": "sum(rate(kafka_server_kafkaserver_linux_disk_read_bytes{job=\"lsst-prometheus-jmx-exporter\"}[5m]))",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -1224,7 +1235,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1272,7 +1284,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -1281,7 +1293,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum(process_open_fds{job=\"prometheus-jmx-exporter\"})",
+          "expr": "sum(process_open_fds{job=\"lsst-prometheus-jmx-exporter\"})",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -1356,7 +1368,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1392,7 +1405,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -1400,13 +1413,13 @@
             "uid": "PACA35AE2C051E365"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "sum by(topic) (increase(kafka_server_brokertopicmetrics_messagesin_total{job=\"prometheus-jmx-exporter\", topic=~\"$topic\", topic!~\"usdf.heartbeats\"}[1m]))",
+          "editorMode": "code",
+          "expr": "sum by(topic) (increase(kafka_server_brokertopicmetrics_messagesin_total{job=\"lsst-prometheus-jmx-exporter\", topic=~\"$topic\", topic!=\"usdf.heartbeats\"}[1m]))",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "{{topic}}",
+          "legendFormat": "__auto",
           "range": true,
           "refId": "Filtered messages in per topic",
           "useBackend": false
@@ -1463,7 +1476,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1499,7 +1513,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -1569,7 +1583,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1605,7 +1620,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -1614,7 +1629,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(topic) (increase(kafka_server_brokertopicmetrics_bytesin_total{job=\"prometheus-jmx-exporter\", topic=~\"$topic\", topic!~\"usdf.heartbeats\"}[1m]))",
+          "expr": "sum by(topic) (increase(kafka_server_brokertopicmetrics_bytesin_total{job=\"lsst-prometheus-jmx-exporter\", topic=~\"$topic\", topic!~\"usdf.heartbeats\"}[1m]))",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -1676,7 +1691,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1712,7 +1728,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -1721,7 +1737,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum by(topic) (increase(kafka_server_brokertopicmetrics_bytesout_total{job=\"prometheus-jmx-exporter\", topic=~\"$topic\", topic!~\"usdf.heartbeats\"}[1m]))",
+          "expr": "sum by(topic) (increase(kafka_server_brokertopicmetrics_bytesout_total{job=\"lsst-prometheus-jmx-exporter\", topic=~\"$topic\", topic!~\"usdf.heartbeats\"}[1m]))",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -1783,7 +1799,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1819,7 +1836,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -1828,7 +1845,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "increase(kafka_server_brokertopicmetrics_totalfetchrequests_total{job=\"prometheus-jmx-exporter\", topic=~\"$topic\"}[1m])",
+          "expr": "increase(kafka_server_brokertopicmetrics_totalfetchrequests_total{job=\"lsst-prometheus-jmx-exporter\", topic=~\"$topic\"}[1m])",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -1907,7 +1924,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -1943,7 +1961,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -1952,7 +1970,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "increase(kafka_server_brokertopicmetrics_totalproducerequests_total{job=\"prometheus-jmx-exporter\", topic=~\"$topic\", topic!=\"usdf.heartbeats\"}[1m])",
+          "expr": "increase(kafka_server_brokertopicmetrics_totalproducerequests_total{job=\"lsst-prometheus-jmx-exporter\", topic=~\"$topic\", topic!=\"usdf.heartbeats\"}[1m])",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -2032,7 +2050,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               }
             ]
           },
@@ -2060,7 +2079,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -2069,7 +2088,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "kafka_log_log_size{job=\"prometheus-jmx-exporter\", topic=~\"$topic\", topic!=\"usdf.heartbeats\"}",
+          "expr": "kafka_log_log_size{job=\"lsst-prometheus-jmx-exporter\", topic=~\"$topic\", topic!=\"usdf.heartbeats\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -2132,7 +2151,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -2164,7 +2184,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "12.0.0",
+      "pluginVersion": "12.2.0-16764329129",
       "targets": [
         {
           "datasource": {
@@ -2235,5 +2255,5 @@
   "timezone": "browser",
   "title": "LSST DRP Kafka Overview",
   "uid": "jwPKIsniz",
-  "version": 12
+  "version": 1
 }
