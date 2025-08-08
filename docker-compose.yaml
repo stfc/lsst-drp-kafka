@@ -11,25 +11,25 @@ services:
     image: confluentinc/cp-zookeeper:latest
     # Container name for Zookeeper
     container_name: zookeeper1
+    # Always restart the container on failure
+    restart: always
     # Healthcheck to ensure Zookeeper is running
     healthcheck:
       test: [ "CMD", "zookeeper-shell", "localhost:2181", "ls", "/" ]
       interval: 10s
       timeout: 10s
       retries: 3
-    # Always restart the container on failure
-    restart: always
     environment:
       # Port for Zookeeper client connections
       ZOOKEEPER_CLIENT_PORT: 2181
       # Tick time for Zookeeper
       ZOOKEEPER_TICK_TIME: 2000
-      # Adding the prometheus JMX exporter as a java agent
+      # Adding the Prometheus JMX exporter as a java agent
       EXTRA_ARGS: >-
         -javaagent:/usr/share/jmx_exporter/jmx_prometheus_javaagent-1.3.0.jar=7071:/usr/share/jmx_exporter/zookeeper_jmx_config.yml
       KAFKA_HEAP_OPTS: "-Xms1G -Xmx1G"
     volumes:
-      # Mount JMX exporter binary file
+      # Mount Prometheus JMX exporter binary file
       - ./monitoring/jmx_exporter:/usr/share/jmx_exporter/
     networks:
       # Attach to the 'lsst' network
@@ -37,11 +37,16 @@ services:
 
   # Kafka broker service
   broker1:
-    # Image for Kafka broker
-    # Use the latest version of Confluent Kafka
+    # Use the 7.9.0 version of Confluent Kafka (Last version before KRaft is default)
     image: confluentinc/cp-kafka:7.9.0
     # Container name for Kafka broker
     container_name: broker1
+    depends_on:
+      # Ensure Zookeeper starts & is running before Kafka broker
+      zookeeper1:
+        condition: service_healthy
+    # Always restart the container on failure
+    restart: always
     healthcheck:
       # Verify the broker is healthy by checking API versions
       test: [ "CMD", "kafka-broker-api-versions", "--bootstrap-server", "broker1:9092" ]
@@ -55,10 +60,6 @@ services:
       - "9092:9092"
       # Internal port mapping for inter-broker communication
       - "29092:29092"
-    depends_on:
-      # Ensure Zookeeper starts & is running before Kafka broker
-      - zookeeper1
-    restart: always
     environment:
       # Unique broker ID
       KAFKA_BROKER_ID: 1
@@ -89,39 +90,39 @@ services:
 
   # Kafka MirrorMaker 2 service for replication
   mirrormaker2:
-    # Image for Kafka Connect (used by MirrorMaker 2)
-    # Use the latest version of Confluent Kafka Connect
+    # Use the latest version of Confluent Kafka Connect (used by MirrorMaker 2)
     image: confluentinc/cp-kafka-connect:latest
     # Container name for MirrorMaker 2
     container_name: mirrormaker2
-    healthcheck:
-      # No healthcheck for MirrorMaker 2
-      test: ["NONE"]
     depends_on:
       # Ensure Zookeeper and Kafka broker start before MirrorMaker 2
       zookeeper1:
         condition: service_healthy
       broker1:
         condition: service_healthy
+    # Always restart the container on failure
     restart: always
+    healthcheck:
+      # No healthcheck for MirrorMaker 2
+      test: ["NONE"]
     command:
       # Command to start MirrorMaker 2 with configuration
       - /bin/connect-mirror-maker
       - /etc/kafka-connect/mm2.properties
+    environment:
+      # Log4j configuration options
+      KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/etc/kafka-connect/kafka-log4j.properties
+      # Adding the Prometheus JMX exporter as a java agent and setting heap memory values
+      EXTRA_ARGS: >-
+        -javaagent:/usr/share/jmx_exporter/jmx_prometheus_javaagent-1.3.0.jar=7071:/usr/share/jmx_exporter/kafka_jmx_config.yml
+      KAFKA_HEAP_OPTS: "-Xms1G -Xmx1G"
     volumes:
       # Mount MirrorMaker 2 configuration file
       - ./mm2.properties:/etc/kafka-connect/mm2.properties:ro
       # Mount Log4j configuration file
       - ./kafka-log4j.properties:/etc/kafka-connect/kafka-log4j.properties:ro
-      # Mount JMX exporter binary file
+      # Mount Prometheus JMX exporter binary file
       - ./monitoring/jmx_exporter:/usr/share/jmx_exporter/
-    environment:
-      # Log4j configuration options
-      KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/etc/kafka-connect/kafka-log4j.properties
-      # Adding the prometheus JMX exporter as a java agent and setting heap memory values
-      EXTRA_ARGS: >-
-        -javaagent:/usr/share/jmx_exporter/jmx_prometheus_javaagent-1.3.0.jar=7071:/usr/share/jmx_exporter/kafka_jmx_config.yml
-      KAFKA_HEAP_OPTS: "-Xms1G -Xmx1G"
     networks:
       # Attach to the 'lsst' network
       - lsst

@@ -1,39 +1,22 @@
 ## Docker Compose File for monitoring Kafka messages from USDF
 
 services:
-  # Grafana dashboard for monitoring Kafka data via Prometheus
-  grafana:
-    # Use the enterprise version of Grafana
-    image: grafana/grafana-enterprise
-    # Container name for Grafana
-    container_name: grafana
-    # Always restart the container on failure
-    restart: always
-    environment:
-      # Linux terminal emulation
-      - TERM=linux
-      # increases the log level from info to debug
-      - GF_LOG_LEVEL=debug
-    ports:
-      # Port mapping for Grafana dashboard
-      - '3000:3000'
-    volumes:
-      # Mount provisioning directory
-      - ./grafana/provisioning:/etc/grafana/provisioning
-      # Mount directory to contain dashoard JSON config files
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
-      # Volume to store any additional grafana data
-      - grafana-data:/var/lib/grafana
-    networks:
-      # Attach to the 'lsst' network
-      - lsst
-
-# Prometheus database for aggregating Kafka broker metrics
+  # Prometheus database for aggregating Kafka broker metrics
   prometheus:
     # Use the latest version of Prometheus
     image: prom/prometheus:latest
     # Container name for Prometheus
     container_name: prometheus
+    depends_on:
+      # Ensure Zookeeper is healthy before Prometheus
+      zookeeper1:
+        condition: service_healthy
+      # Ensure Kafka broker is healthy before Prometheus
+      broker1:
+        condition: service_healthy
+      # Ensure MirrorMaker 2 is running before Prometheus
+      mirrormaker2:
+        condition: service_started
     # Always restart the container on failure
     restart: always
     ports:
@@ -63,15 +46,18 @@ services:
     image: danielqsj/kafka-exporter
     # Container name for Kafka Exporter
     container_name: kafka-exporter
-    # Restart the container on failure
-    restart: always
     depends_on:
-      # Ensure Zookeeper and Kafka broker start before MirrorMaker 2
+      # Ensure Zookeeper is healthy before Kafka Exporter
       zookeeper1:
         condition: service_healthy
+      # Ensure Kafka broker is healthy before Kafka Exporter
       broker1:
         condition: service_healthy
-        restart: true
+      # Ensure MirrorMaker 2 is running before Kafka Exporter
+      mirrormaker2:
+        condition: service_started
+    # Restart the container on failure
+    restart: always
     command:
       # Command to connect Kafka Exporter to Kafka broker
       - "--kafka.server=broker1:9092"
@@ -84,8 +70,5 @@ services:
       - lsst
 
 volumes:
-  # Volume for additional grafana data stored
-  grafana-data: {}
-
-  # Volume for additional grafana data stored
+  # Volume for additional prometheus data stored
   prometheus-data: {}
