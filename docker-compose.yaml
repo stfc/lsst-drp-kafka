@@ -144,27 +144,27 @@ services:
     restart: always
     environment:
       # Configuration file for IngestD HSC PDR2 Multisite
-      CTRL_INGESTD_CONFIG: /tmp/ingestd-configs/dc2.yaml
+      CTRL_INGESTD_CONFIG: /etc/ingestd-configs/dc2.yaml
       # Database authentication file
-      LSST_DB_AUTH: /tmp/db-auth.yaml
+      LSST_DB_AUTH: /etc/db-auth.yaml
       # Butler repository index file
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
       LSST_HTTP_CACERT_BUNDLE: /etc/grid-security/certificates/
-      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u1000
-      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u1000
+      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u35505
+      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u35505
     volumes:
       # Mount various configuration and repository files
       - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
-      - ./ingestd-configs/hsc_pdr2_multisite.yaml:/tmp/ingestd-configs/hsc_pdr2_multisite.yaml:ro
-      - ./ingestd-configs/ccms1.yaml:/tmp/ingestd-configs/ccms1.yaml:ro
-      - ./ingestd-configs/dc2.yaml:/tmp/ingestd-configs/dc2.yaml:ro
-      - ./db-auth.yaml:/tmp/db-auth.yaml:ro
+      - ./ingestd-configs/hsc_pdr2_multisite.yaml:/etc/ingestd-configs/hsc_pdr2_multisite.yaml:ro
+      - ./ingestd-configs/ccms1.yaml:/etc/ingestd-configs/ccms1.yaml:ro
+      - ./ingestd-configs/dc2.yaml:/etc/ingestd-configs/dc2.yaml:ro
+      - ./db-auth.yaml:/etc/db-auth.yaml:ro
       - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml:ro
       - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml:ro
       - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml:ro
       - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml:ro
       - /etc/grid-security/certificates:/etc/grid-security/certificates:ro
-      - /tmp/x509up_u35505:/tmp/x509up_u1000:ro
+      - /tmp/:/tmp/:ro
     networks:
       # Attach to the 'lsst' network
       - lsst
@@ -186,27 +186,27 @@ services:
     restart: always
     environment:
       # Configuration file for IngestD HSC PDR2 Multisite
-      CTRL_INGESTD_CONFIG: /tmp/ingestd-configs/ccms1.yaml
+      CTRL_INGESTD_CONFIG: /etc/ingestd-configs/ccms1.yaml
       # Database authentication file
-      LSST_DB_AUTH: /tmp/db-auth.yaml
+      LSST_DB_AUTH: /etc/db-auth.yaml
       # Butler repository index file
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
       LSST_HTTP_CACERT_BUNDLE: /etc/grid-security/certificates/
-      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u1000
-      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u1000
+      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u35505
+      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u35505
     volumes:
       # Mount various configuration and repository files
       - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
-      - ./ingestd-configs/hsc_pdr2_multisite.yaml:/tmp/ingestd-configs/hsc_pdr2_multisite.yaml:ro
-      - ./ingestd-configs/ccms1.yaml:/tmp/ingestd-configs/ccms1.yaml:ro
-      - ./ingestd-configs/dc2.yaml:/tmp/ingestd-configs/dc2.yaml:ro
-      - ./db-auth.yaml:/tmp/db-auth.yaml:ro
+      - ./ingestd-configs/hsc_pdr2_multisite.yaml:/etc/ingestd-configs/hsc_pdr2_multisite.yaml:ro
+      - ./ingestd-configs/ccms1.yaml:/etc/ingestd-configs/ccms1.yaml:ro
+      - ./ingestd-configs/dc2.yaml:/etc/ingestd-configs/dc2.yaml:ro
+      - ./db-auth.yaml:/etc/db-auth.yaml:ro
       - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml:ro
       - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml:ro
       - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml:ro
       - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml:ro
       - /etc/grid-security/certificates:/etc/grid-security/certificates:ro
-      - /tmp/x509up_u35505:/tmp/x509up_u1000:ro
+      - /tmp/:/tmp/:ro
     networks:
       # Attach to the 'lsst' network
       - lsst
@@ -228,27 +228,27 @@ services:
     restart: always
     environment:
       # Configuration file for IngestD HSC PDR2 Multisite
-      CTRL_INGESTD_CONFIG: /tmp/ingestd-configs/hsc_pdr2_multisite.yaml
+      CTRL_INGESTD_CONFIG: /etc/ingestd-configs/hsc_pdr2_multisite.yaml
       # Database authentication file
-      LSST_DB_AUTH: /tmp/db-auth.yaml
+      LSST_DB_AUTH: /etc/db-auth.yaml
       # Butler repository index file
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
       LSST_HTTP_CACERT_BUNDLE: /etc/grid-security/certificates/
-      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u1000
-      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u1000
+      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u35505
+      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u35505
     volumes:
       # Mount various configuration and repository files
       - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
-      - ./ingestd-configs/hsc_pdr2_multisite.yaml:/tmp/ingestd-configs/hsc_pdr2_multisite.yaml:ro
-      - ./ingestd-configs/ccms1.yaml:/tmp/ingestd-configs/ccms1.yaml:ro
-      - ./ingestd-configs/dc2.yaml:/tmp/ingestd-configs/dc2.yaml:ro
-      - ./db-auth.yaml:/tmp/db-auth.yaml:ro
+      - ./ingestd-configs/hsc_pdr2_multisite.yaml:/etc/ingestd-configs/hsc_pdr2_multisite.yaml:ro
+      - ./ingestd-configs/ccms1.yaml:/ect/ingestd-configs/ccms1.yaml:ro
+      - ./ingestd-configs/dc2.yaml:/etc/ingestd-configs/dc2.yaml:ro
+      - ./db-auth.yaml:/etc/db-auth.yaml:ro
       - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml:ro
       - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml:ro
       - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml:ro
       - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml:ro
       - /etc/grid-security/certificates:/etc/grid-security/certificates:ro
-      - /tmp/x509up_u35505:/tmp/x509up_u1000:ro
+      - /tmp/:/tmp/:ro
     networks:
       # Attach to the 'lsst' network
       - lsst
