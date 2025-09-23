@@ -253,6 +253,43 @@ services:
       # Attach to the 'lsst' network
       - lsst
 
+  # IngestD service for DP2_PREP Multisite dataset
+  ingestd_dp2_prep:
+    # Image for IngestD
+    # Check Butler compatibility before updating version
+    image: ghcr.io/lsst-dm/ctrl_ingestd:2.1
+    # Container name for IngestD DP2_prep
+    container_name: ingestd_dp2_prep
+    depends_on:
+      # Ensure Kafka broker is healthy before IngestD
+      broker1:
+        condition: service_healthy
+      # Ensure MirrorMaker 2 is running before IngestD
+      mirrormaker2:
+        condition: service_started
+    restart: always
+    environment:
+      # Configuration file for IngestD HSC PDR2 Multisite
+      CTRL_INGESTD_CONFIG: /etc/ingestd-configs/dp2_prep.yaml
+      # Database authentication file
+      LSST_DB_AUTH: /etc/db-auth.yaml
+      # Butler repository index file
+      DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
+      LSST_HTTP_CACERT_BUNDLE: /etc/grid-security/certificates/
+      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u35505
+      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u35505
+    volumes:
+      # Mount various configuration and repository files
+      - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
+      - ./ingestd-configs/dp2_prep.yaml:/etc/ingestd-configs/dp2_prep.yaml:ro
+      - ./db-auth.yaml:/etc/db-auth.yaml:ro
+      - ./butler-repos/dp2_prep/butler.yaml:/etc/dp2_prep/butler.yaml:ro
+      - /etc/grid-security/certificates:/etc/grid-security/certificates:ro
+      - /tmp/:/tmp/:ro
+    networks:
+      # Attach to the 'lsst' network
+      - lsst
+
   # Kafka REST Proxy service
   rest-proxy:
     # Image for Kafka REST Proxy

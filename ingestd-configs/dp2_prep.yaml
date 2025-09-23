@@ -1,0 +1,14 @@
+brokers:
+  - broker1:29092
+
+group_id: "ral_ingestd"
+
+num_messages: 50
+
+butler_repo: dp2_prep
+
+topics:
+  RAL_BUTLER_DISK-dp2_prep:
+    rucio_prefix: davs://webdav.echo.stfc.ac.uk:1094/lsst:datadisk/butler/repos/dp2_prep/
+  RAL_RAW_DISK-dp2_prep:
+    rucio_prefix: davs://webdav.echo.stfc.ac.uk:1094/lsst:datadisk/raw/

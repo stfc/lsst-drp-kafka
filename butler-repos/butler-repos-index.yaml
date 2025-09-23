@@ -2,3 +2,4 @@ panda-test-med-1:  /etc/panda-test-med-1-lancs/butler.yaml
 hsc_pdr2_multisite: /etc/hsc-pdr2-multisite/butler.yaml
 dc2: /etc/panda-test-med-1-lancs/butler.yaml
 ccms1: /etc/ccms1/butler.yaml
+dp2_prep: /etc/dp2_prep/butler.yaml
