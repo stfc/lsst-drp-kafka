@@ -2,7 +2,7 @@
 
 # Including the docker compose from monitoring to run monitoring services
 include:
-  - ./monitoring/docker-compose.yaml
+  - /home/rtt84632/lsst-drp-kafka/monitoring/docker-compose.yaml
 
 services:
   # Zookeeper service for managing Kafka brokers
@@ -30,7 +30,7 @@ services:
       KAFKA_HEAP_OPTS: "-Xms1G -Xmx1G"
     volumes:
       # Mount Prometheus JMX exporter binary file
-      - ./monitoring/jmx_exporter:/usr/share/jmx_exporter/
+      - /home/rtt84632/lsst-drp-kafka/monitoring/jmx_exporter:/usr/share/jmx_exporter/
     networks:
       # Attach to the 'lsst' network
       - lsst
@@ -83,7 +83,7 @@ services:
       KAFKA_HEAP_OPTS: "-Xms3G -Xmx3G"
     volumes:
       # Mount JMX exporter binary file
-      - ./monitoring/jmx_exporter:/usr/share/jmx_exporter/
+      - /home/rtt84632/lsst-drp-kafka/monitoring/jmx_exporter:/usr/share/jmx_exporter/
     networks:
       # Attach to the 'lsst' network
       - lsst
@@ -118,11 +118,11 @@ services:
       KAFKA_HEAP_OPTS: "-Xms1G -Xmx1G"
     volumes:
       # Mount MirrorMaker 2 configuration file
-      - ./mm2.properties:/etc/kafka-connect/mm2.properties:ro
+      - /home/rtt84632/lsst-drp-kafka/mm2.properties:/etc/kafka-connect/mm2.properties:ro
       # Mount Log4j configuration file
-      - ./kafka-log4j.properties:/etc/kafka-connect/kafka-log4j.properties:ro
+      - /home/rtt84632/lsst-drp-kafka/kafka-log4j.properties:/etc/kafka-connect/kafka-log4j.properties:ro
       # Mount Prometheus JMX exporter binary file
-      - ./monitoring/jmx_exporter:/usr/share/jmx_exporter/
+      - /home/rtt84632/lsst-drp-kafka/monitoring/jmx_exporter:/usr/share/jmx_exporter/
     networks:
       # Attach to the 'lsst' network
       - lsst
@@ -143,28 +143,29 @@ services:
         condition: service_started
     restart: always
     environment:
-      # Configuration file for IngestD HSC PDR2 Multisite
-      CTRL_INGESTD_CONFIG: /etc/ingestd-configs/dc2.yaml
+      # Configuration file for IngestD
+      CTRL_INGESTD_CONFIG: /etc/ingestd-configs/ingestD.yaml
       # Database authentication file
       LSST_DB_AUTH: /etc/db-auth.yaml
       # Butler repository index file
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
       LSST_HTTP_CACERT_BUNDLE: /etc/grid-security/certificates/
-      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u35505
-      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u35505
+      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u1000
+      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u1000
+      LSST_RESOURCES_WEBDAV_CONFIG: /etc/webdav.config
     volumes:
       # Mount various configuration and repository files
-      - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
-      - ./ingestd-configs/hsc_pdr2_multisite.yaml:/etc/ingestd-configs/hsc_pdr2_multisite.yaml:ro
-      - ./ingestd-configs/ccms1.yaml:/etc/ingestd-configs/ccms1.yaml:ro
-      - ./ingestd-configs/dc2.yaml:/etc/ingestd-configs/dc2.yaml:ro
-      - ./db-auth.yaml:/etc/db-auth.yaml:ro
-      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml:ro
-      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml:ro
-      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml:ro
-      - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml:ro
+      # Needed for all ingestD
+      - /home/rtt84632/lsst-drp-kafka/butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
+      - /home/rtt84632/lsst-drp-kafka/db-auth.yaml:/etc/db-auth.yaml:ro
       - /etc/grid-security/certificates:/etc/grid-security/certificates:ro
+      - /home/rtt84632/lsst-drp-kafka/ingestd-configs/webdav.config:/etc/webdav.config:ro
       - /tmp/:/tmp/:ro
+
+      # Adapted for each ingestD
+      - /home/rtt84632/lsst-drp-kafka/ingestd-configs/dc2.yaml:/etc/ingestd-configs/ingestD.yaml:ro
+      - /home/rtt84632/lsst-drp-kafka/butler-repos/dc2/butler.yaml:/etc/butler.yaml:ro
+
     networks:
       # Attach to the 'lsst' network
       - lsst
@@ -186,27 +187,27 @@ services:
     restart: always
     environment:
       # Configuration file for IngestD HSC PDR2 Multisite
-      CTRL_INGESTD_CONFIG: /etc/ingestd-configs/ccms1.yaml
+      CTRL_INGESTD_CONFIG: /etc/ingestd-configs/ingestD.yaml
       # Database authentication file
       LSST_DB_AUTH: /etc/db-auth.yaml
       # Butler repository index file
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
       LSST_HTTP_CACERT_BUNDLE: /etc/grid-security/certificates/
-      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u35505
-      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u35505
+      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u1000
+      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u1000
+      LSST_RESOURCES_WEBDAV_CONFIG: /etc/webdav.config
     volumes:
       # Mount various configuration and repository files
-      - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
-      - ./ingestd-configs/hsc_pdr2_multisite.yaml:/etc/ingestd-configs/hsc_pdr2_multisite.yaml:ro
-      - ./ingestd-configs/ccms1.yaml:/etc/ingestd-configs/ccms1.yaml:ro
-      - ./ingestd-configs/dc2.yaml:/etc/ingestd-configs/dc2.yaml:ro
-      - ./db-auth.yaml:/etc/db-auth.yaml:ro
-      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml:ro
-      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml:ro
-      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml:ro
-      - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml:ro
+      # Needed for all ingestD
+      - /home/rtt84632/lsst-drp-kafka/butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
+      - /home/rtt84632/lsst-drp-kafka/db-auth.yaml:/etc/db-auth.yaml:ro
       - /etc/grid-security/certificates:/etc/grid-security/certificates:ro
+      - /home/rtt84632/lsst-drp-kafka/ingestd-configs/webdav.config:/etc/webdav.config:ro
       - /tmp/:/tmp/:ro
+
+      # Adapted for each ingestD
+      - /home/rtt84632/lsst-drp-kafka/ingestd-configs/ccms1.yaml:/etc/ingestd-configs/ingestD.yaml:ro
+      - /home/rtt84632/lsst-drp-kafka/butler-repos/ccms1/butler.yaml:/etc/butler.yaml:ro
     networks:
       # Attach to the 'lsst' network
       - lsst
@@ -228,27 +229,27 @@ services:
     restart: always
     environment:
       # Configuration file for IngestD HSC PDR2 Multisite
-      CTRL_INGESTD_CONFIG: /etc/ingestd-configs/hsc_pdr2_multisite.yaml
+      CTRL_INGESTD_CONFIG: /etc/ingestd-configs/ingestD.yaml
       # Database authentication file
       LSST_DB_AUTH: /etc/db-auth.yaml
       # Butler repository index file
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
       LSST_HTTP_CACERT_BUNDLE: /etc/grid-security/certificates/
-      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u35505
-      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u35505
+      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u1000
+      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u1000
+      LSST_RESOURCES_WEBDAV_CONFIG: /etc/webdav.config
     volumes:
       # Mount various configuration and repository files
-      - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
-      - ./ingestd-configs/hsc_pdr2_multisite.yaml:/etc/ingestd-configs/hsc_pdr2_multisite.yaml:ro
-      - ./ingestd-configs/ccms1.yaml:/ect/ingestd-configs/ccms1.yaml:ro
-      - ./ingestd-configs/dc2.yaml:/etc/ingestd-configs/dc2.yaml:ro
-      - ./db-auth.yaml:/etc/db-auth.yaml:ro
-      - ./butler-repos/panda-test-med-1-lancs/butler.yaml:/etc/panda-test-med-1-lancs/butler.yaml:ro
-      - ./butler-repos/hsc-pdr2-multisite/butler.yaml:/etc/hsc-pdr2-multisite/butler.yaml:ro
-      - ./butler-repos/ccms1/butler.yaml:/etc/ccms1/butler.yaml:ro
-      - ./butler-repos/dc2/butler.yaml:/etc/panda-test-med-1/butler.yaml:ro
+      # Needed for all ingestD
+      - /home/rtt84632/lsst-drp-kafka/butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
+      - /home/rtt84632/lsst-drp-kafka/db-auth.yaml:/etc/db-auth.yaml:ro
       - /etc/grid-security/certificates:/etc/grid-security/certificates:ro
+      - /home/rtt84632/lsst-drp-kafka/ingestd-configs/webdav.config:/etc/webdav.config:ro
       - /tmp/:/tmp/:ro
+
+      # Adapted for each ingestD
+      - /home/rtt84632/lsst-drp-kafka/ingestd-configs/hsc_pdr2_multisite.yaml:/etc/ingestd-configs/ingestD.yaml:ro
+      - /home/rtt84632/lsst-drp-kafka/butler-repos/hsc_pdr2_multisite/butler.yaml:/etc/butler.yaml:ro
     networks:
       # Attach to the 'lsst' network
       - lsst
@@ -270,22 +271,27 @@ services:
     restart: always
     environment:
       # Configuration file for IngestD HSC PDR2 Multisite
-      CTRL_INGESTD_CONFIG: /etc/ingestd-configs/dp2_prep.yaml
+      CTRL_INGESTD_CONFIG: /etc/ingestd-configs/ingestD.yaml
       # Database authentication file
       LSST_DB_AUTH: /etc/db-auth.yaml
       # Butler repository index file
       DAF_BUTLER_REPOSITORY_INDEX: /etc/butler-repos-index.yaml
       LSST_HTTP_CACERT_BUNDLE: /etc/grid-security/certificates/
-      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u35505
-      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u35505
+      LSST_HTTP_AUTH_CLIENT_KEY: /tmp/x509up_u1000
+      LSST_HTTP_AUTH_CLIENT_CERT: /tmp/x509up_u1000
+      LSST_RESOURCES_WEBDAV_CONFIG: /etc/webdav.config
     volumes:
       # Mount various configuration and repository files
-      - ./butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
-      - ./ingestd-configs/dp2_prep.yaml:/etc/ingestd-configs/dp2_prep.yaml:ro
-      - ./db-auth.yaml:/etc/db-auth.yaml:ro
-      - ./butler-repos/dp2_prep/butler.yaml:/etc/dp2_prep/butler.yaml:ro
+      # Needed for all ingestD
+      - /home/rtt84632/lsst-drp-kafka/butler-repos/butler-repos-index.yaml:/etc/butler-repos-index.yaml:ro
+      - /home/rtt84632/lsst-drp-kafka/db-auth.yaml:/etc/db-auth.yaml:ro
       - /etc/grid-security/certificates:/etc/grid-security/certificates:ro
+      - /home/rtt84632/lsst-drp-kafka/ingestd-configs/webdav.config:/etc/webdav.config:ro
       - /tmp/:/tmp/:ro
+
+      # Adapted for each ingestD
+      - /home/rtt84632/lsst-drp-kafka/ingestd-configs/dp2_prep.yaml:/etc/ingestd-configs/ingestD.yaml:ro
+      - /home/rtt84632/lsst-drp-kafka/butler-repos/dp2_prep/butler.yaml:/etc/butler.yaml:ro
     networks:
       # Attach to the 'lsst' network
       - lsst
